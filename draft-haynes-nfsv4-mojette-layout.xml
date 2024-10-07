@@ -27,6 +27,12 @@
       <email>loghyr@hammerspace.com</email>
     </address>
   </author>
+  <author fullname="Pierre Evenou" initials="P." surname="Evenou">
+    <organization abbrev="Hammerspace">Hammerspace</organization>
+    <address>
+      <email>pierre.evenou@hammerspace.com</email>
+    </address>
+  </author>
   <date year="YEARVAR" month="MONTHVAR" day="DAYVAR"/>
   <area>Transport</area>
   <workgroup>Network File System Version 4</workgroup>
