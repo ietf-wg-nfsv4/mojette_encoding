@@ -98,178 +98,314 @@
     </section>
   </section>
 
-  <section anchor="sec_nsmt" numbered="true" removeInRFC="false" toc="default">
-    <name>Non-Systematic Mojette Transform</name>
-  </section>
+  <section anchor="mojette" numbered="true" removeInRFC="false" toc="default">
+    <name>Mojette Transform</name>
 
-  <section anchor="sec_smt" numbered="true" removeInRFC="false" toc="default">
-    <name>Systematic Mojette Transform</name>
-
-    <t>
-      The Mojette Transform is an erasure coding technique that provides
-      fault tolerance for data storage systems by enabling the recovery
-      of lost data blocks. This section describes the integration of the
-      systematic Mojette Transform into the NFS protocol, focusing on
-      encoding and decoding file system blocks, typically sized at 4KB
-      or 8KB.
-    </t>
-
-    <section anchor="sec_sys_dbr" numbered="true" removeInRFC="false" toc="default">
-      <name>Data Block Representation</name>
+    <section anchor="moj_intro" numbered="true" removeInRFC="false" toc="default">
+      <name>Introduction</name>
 
       <t>
-        In the context of NFS, a data block corresponds to a file system block,
-        which is a contiguous segment of data, typically 4KB or 8KB in size. The
-        systematic Mojette Transform encodes these blocks to ensure data integrity
-        and availability in distributed storage environments.
+        The Mojette Transform is an erasure coding technique that provides
+        fault tolerance for data storage systems by enabling the recovery
+        of lost data blocks. This section describes the integration of
+        the systematic Mojette Transform into the NFS protocol, focusing
+        on encoding and decoding file system blocks, typically sized at
+        4KB or 8KB.
       </t>
+
+      <section anchor="moj_encode" numbered="true" removeInRFC="false" toc="default">
+        <name>Encoding</name>
+
+        <t>
+          The Mojette Transform involves the following steps to encode a data block:
+        </t>
+
+        <dl newline="false" spacing="normal">
+          <dt>Initialization:</dt>
+          <dd>
+            Each data block is treated as a 2D grid of data elements
+            (pixels). Typically, a block is structured as a matrix of
+            size PxQ, where P and Q are the dimensions of
+            the grid.
+          </dd>
+
+          <dt>Projections Calculation:</dt>
+          <dd>
+            Projections are computed along specific directions defined by
+            pairs of coprime integers (p_i, q_i). Each projection sums
+            the values of the data elements (pixels) along a line defined
+            by these directions. The size of a projection is given as in
+            <xref target='size_of_projection' />.  For a given projection
+            direction (p_i, q_i), the projection values are calculated
+            as in <xref target='projection' />, where Delta is 1 if the
+            argument is zero and 0 otherwise.
+          </dd>
+
+        </dl>
+
+        <figure anchor='size_of_projection'>
+          <artwork>
+Size of projection = (P - 1) x |q| + (Q - 1) * |p| + 1
+          </artwork>
+        </figure>
+
+        <figure anchor='projection'>
+          <artwork>
+Projection(b, p_i, q_i) =
+    \sum_{k=0}^{Q-1} \sum_{l=0}^{P-1}
+            Data(k, l) x Delta(b - l x p_i + k x q_i)
+          </artwork>
+        </figure>
+      </section>
+
+      <section anchor="moj_decode" numbered="true" removeInRFC="false" toc="default">
+        <name>Decoding</name>
+        <t>
+          Decoding the Mojette Transform is the inverse of encoding,
+          involving the reconstruction of data from projection data to
+          fill an empty grid. This involves solving a system of linear
+          equations defined by the projection differences and the
+          projection directions (p_i, q_i). The algorithm iterates
+          to refine the values of the missing data elements until the
+          original data block is reconstructed.
+        </t>
+
+        <t>
+          Data reconstruction is possible if Katz's criterion holds,
+          which was extended to any convex shape. The Katz's criterion
+          specifies that reconstruction is valid if for a given set
+          of n projections along n directions (p_i, q_i) either
+          sum_{i=0}^{n} q_i &ge; Q or sum_{i=0}^{n} p_i &ge; P.
+        </t>
+
+        <t>
+          Adjusting the number of lines Q and the projections set
+          allows setting a desired fault-tolerance threshold.
+        </t>
+
+        <t>
+          For example a 64x4 grid can be decoded by the projection
+          set {(0, 1), (1, 1), (2, 1), (3, 1)} as sum_{i=1}^{4} q_i = 4.
+        </t>
+      </section>
+
+      <section anchor="moj_impls" numbered="true" removeInRFC="false" toc="default">
+        <name>Systematic and Non Systematic Implementations</name>
+        <t>
+          A systematic code is an error-correcting code where the input data is
+          embedded directly in the encoded output. In contrast, a non-systematic
+          code produces an output that does not contain the original input
+          symbols. The Mojette Transform can be implemented in both ways, allowing
+          it to adapt to various use cases.
+        </t>
+      </section>
+
+      <section anchor="moj_dbr" numbered="true" removeInRFC="false" toc="default">
+        <name>Data Block Representation</name>
+        <t>
+          In the context of NFS, a data block corresponds to a file system
+          block, which is a contiguous segment of data, typically 4KB
+          or 8KB in size. The Mojette Transform encodes these blocks to
+          ensure data integrity and availability in distributed storage
+          environments.
+        </t>
+      </section>
     </section>
 
-    <section anchor="sec_sys_esmt" numbered="true" removeInRFC="false" toc="default">
-      <name>Encoding with the Systematic Mojette Transform</name>
+    <section  anchor="moj_non_sys" numbered="true" removeInRFC="false" toc="default">
+      <name>Non-Systematic Mojette Transform</name>
+      <section  anchor="moj_non_sys_encode" numbered="true" removeInRFC="false" toc="default">
+        <name>Block Encoding</name>
+        <t>
+          In the non-systematic version of the Mojette Transform,
+          the original data block is not directly included in the
+          encoded output. Instead, the entire encoded output consists
+          of projections computed from the original data. The number
+          of computed projections n is larger than the number of
+          projections m required to rebuild the initial data.
+        </t>
+      </section>
 
-      <t>
-        The systematic Mojette Transform involves the following steps to encode
-        a file system block:
-      </t>
+      <section  anchor="moj_non_sys_decode" numbered="true" removeInRFC="false" toc="default">
+        <name>Block Decoding</name>
+        <t>
+          To decode a file system block that has undergone the
+          non-systematic Mojette Transform, the following steps are
+          followed:
+        </t>
 
-      <dl newline="false" spacing="normal">
-        <dt>Initialization:</dt>
-        <dd>
-          Each file system block is treated as a 2D grid of data elements
-          (pixels). Typically, a block is structured as a matrix of size
-          P * Q, where P and Q are the dimensions of the grid.
-        </dd>
+        <dl newline="false" spacing="normal">
+          <dt>Identify Available Projections:</dt>
+          <dd>
+            Determine which projections are available. A least m
+            projections (what ever they are) out of n must be available.
+          </dd>
 
-        <dt>Projections Calculation:</dt>
-        <dd>
-          Projections are computed along specific directions defined by
-          pairs of coprime integers (p_i, q_i). Each projection sums the
-          values of the data elements (pixels) along a line defined by
-          these directions. The size of a projection is given by:
+          <dt>Recompute Data Block:</dt>
+          <dd>
+             Apply the inverse Mojette Transform to rebuild the original Data.
+          </dd>
+        </dl>
+      </section>
 
-          For a given projection direction (p_i, q_i), where $\Delta$
-          is 1 if the argument is zero and 0 otherwise, the projection
-          values are calculated as:
+      <section  anchor="moj_non_sys_exam" numbered="true" removeInRFC="false" toc="default">
+        <name>Example</name>
 
-        </dd>
+        <t>
+          Assume a file system block of 4KB is divided into a 128x4
+          matrix of 128-bit elements. Using the non-systematic Mojette
+          Transform, we compute projections along selected directions,
+          such as (-2,1), (-1, -1), (0,1), (1,1), (2,1) and
+          (3,1). The original data is not stored directly; instead,
+          the projections are stored.
+        </t>
 
-        <dt>Systematic Code Construction:</dt>
-        <dd>
+        <t>
+          If a data loss occurs, for instance, if two projections
+          are lost, the missing elements can be recovered by using the
+          remaining projections and solving the inverse problem. Any set
+          of 4 projections among the 6 generated can rebuild exactly the
+          original data block
+        </t>
+      </section>
+    </section>
+
+    <section  anchor="moj_sys" numbered="true" removeInRFC="false" toc="default">
+      <name>Systematic Mojette Transform</name>
+      <section  anchor="moj_sys_encod" numbered="true" removeInRFC="false" toc="default">
+        <name>Block Encoding</name>
+        <t>
           In the systematic version, the original data block (file system
-          block) is part of the encoded output. Additional projections are
-          calculated to provide redundancy. If K is the number of original
-          data blocks and N is the total number of encoded blocks (including
-          projections), the systematic code will have the first K blocks as
-          the original data and the remaining N - K blocks as projections.
-        </dd>
-      </dl>
+          block) is part of the encoded output. Additional projections
+          are calculated to provide redundancy. If k is the number of
+          original data blocks and n is the total number of encoded
+          blocks (including projections), the systematic code will have
+          the first k blocks as the original data and the remaining n -
+          k blocks as projections.
+        </t>
+      </section>
 
-          <figure anchor='size_of_proj'>
-            <artwork>
-Size of projection = (P - 1) * |q| + (Q - 1) * |p| + 1
-            </artwork>
-         </figure>
+      <section  anchor="moj_sys_decod" numbered="true" removeInRFC="false" toc="default">
+        <name>Block Decoding</name>
+        <t>
+          To decode a file system block that has undergone the Systematic
+          Mojette Transform, the following steps are followed:
+        </t>
 
-          <figure anchor='projection'>
-            <artwork>
-Projection(b, p_i, q_i) = \sum_{k=0}^{Q-1} \sum_{l=0}^{P-1} \text{Data}(k, l) * \Delta(b - l * p_i + k * q_i)
-            </artwork>
-         </figure>
+        <dl newline="false" spacing="normal">
+          <dt>Identify Missing Data:</dt>
+          <dd>
+            Determine which data lines are missing in the block. Let e
+            be the number of missing lines.
+          </dd>
+          <dt>Recompute Projections:</dt>
+          <dd>
+            Compute the projections of the available (partial) data
+            blocks. Calculate the differences between the projections
+            of the full data and the partial data.
+          </dd>
+          <dt>Combine Existing Data and Recomputed projection:</dt>
+          <dd>
+            Recreate the full block of data by combining the existing
+            data with the reconstructed data according to their positions
+            in the block.
+          </dd>
+        </dl>
+      </section>
 
+      <section  anchor="moj_sys_exam" numbered="true" removeInRFC="false" toc="default">
+        <name>Example</name>
+        <t>
+          Assume a file system block of 4KB is divided into a $64\times4$
+          matrix of 128-bit elements. Using the systematic Mojette
+          Transform, we first compute projections along selected
+          directions, such as (0,1), and (1,1). The original 4 blocks
+          of 64 128-bit elements remains part of the encoded data, and
+          the 2 additional projections are stored for redundancy. If
+          a data loss occurs, the missing elements can be recovered by
+          using the projections and solving the inverse problem.
+        </t>
+      </section>
     </section>
 
-    <section anchor="sec_sys_dsmt" numbered="true" removeInRFC="false" toc="default">
-      <name>Decoding with the Systematic Mojette Transform</name>
-
-      <t>
-        To decode a file system block that has undergone the systematic Mojette
-        Transform, the following steps are followed:
-      </t>
-
-      <dl newline="false" spacing="normal">
-        <dt>Identify Missing Data:</dt>
-        <dd>
-          Determine which data blocks are missing. Let
-          E be the number of missing blocks.
-        </dd>
-
-        <dt>Recompute Projections:</dt>
-        <dd>
-          Compute the projections of the available (partial) data
-          blocks. Calculate the differences between the projections of
-          the full data and the partial data.
-        </dd>
-
-        <dt>Reconstruction Algorithm:</dt>
-        <dd>
-          Use the inverse Mojette Transform algorithm to reconstruct the
-          missing data. This involves solving a system of linear equations
-          defined by the projection differences and the projection
-          directions (p_i, q_i). The algorithm iteratively refines the
-          values of the missing data elements until the original data
-          block is reconstructed.
-        </dd>
-      </dl>
-    </section>
-
-    <section numbered="true" removeInRFC="false" toc="default">
-      <name>Example</name>
-
-      <t>
-        Assume a file system block of 4KB is divided into a $64\times4$
-        matrix of 128-bit elements. Using the systematic Mojette Transform,
-        we first compute projections along selected directions, such
-        as (0, 1), and (1 ,1). The original 4 blocks of 64 128-bit
-        elements remains part of the encoded data, and the 2 additional
-        projections are stored for redundancy. If a data loss occurs,
-        the missing elements can be recovered by using the projections
-        and solving the inverse problem.
-      </t>
-
-    </section>
-    <section numbered="true" removeInRFC="false" toc="default">
+    <section  anchor="moj_conc" numbered="true" removeInRFC="false" toc="default">
       <name>Conclusion</name>
-
       <t>
-        The systematic Mojette Transform provides an efficient and effective
-        way to enhance data reliability by encoding file system blocks
-        with additional projections. This method ensures that data can be
-        reconstructed even in the presence of failures, thereby enhancing
-        the fault tolerance of the file system.
+        The Mojette Transform provides two implementations for an
+        efficient and effective way to enhance data reliability by
+        encoding file system blocks with additional projections. These
+        methods ensure that data can be reconstructed even in the presence
+        of failures, thereby enhancing the fault tolerance of the file
+        system.
       </t>
 
+      <t>
+        In summary, the Mojette Transform offers robust solutions for data
+        reliability in file systems, balancing redundancy, efficiency,
+        and performance to ensure data integrity and quick recovery
+        from failures.
+      </t>
+
+      <section  anchor="moj_conc_non_sys" numbered="true" removeInRFC="false" toc="default">
+        <name>Benefits of Non-Systematic Mojette Transform:</name>
+        <dl newline="false" spacing="normal">
+          <dt>Fast Failure Detection:</dt>
+          <dd>
+            <t>
+              By storing only encoded data and having the ability to
+              rebuild the original block from any sufficient subset of
+              projections, the non-systematic encoding implementation
+              offers great flexibility and allows fast failure detection
+              and recovery.
+            </t>
+          </dd>
+
+          <dt>Constant Performance:</dt>
+          <dd>
+            <t>
+              The non-systematic decoding algorithm is the most
+              performant of all implementations. Although decoding
+              always occurs, the overhead is low, and unlike systematic
+              encoding, performance remains constant regardless of
+              the number of failures.
+            </t>
+          </dd>
+        </dl>
+      </section>
+
+      <section  anchor="moj_conc_sys" numbered="true" removeInRFC="false" toc="default">
+        <name>Benefits of Systematic Mojette Transform:</name>
+        <dl newline="false" spacing="normal">
+          <dt>Redundancy Reduction:</dt>
+          <dd>
+            <t>
+              Systematic Mojette coding reduces redundancy by
+              integrating the original data blocks into the encoded
+              data, unlike non-systematic codes that generate entirely
+              new data from the original.
+            </t>
+          </dd>
+
+          <dt>Efficiency:</dt>
+          <dd>
+            <t>
+              Fewer projections need to be calculated and stored,
+              reducing both computational and storage overhead.
+            </t>
+          </dd>
+
+          <dt>Performance:</dt>
+          <dd>
+            <t>
+              Decoding is faster and simpler, especially when some
+              original data blocks are available, enabling quicker data
+              access. However, performance is slightly degraded in the
+              case of failures and depends on the number of failures.
+            </t>
+          </dd>
+        </dl>
+      </section>
     </section>
-  </section>
-
-  <section anchor="sec_benefits" numbered="true" removeInRFC="false" toc="default">
-    <name>Benefits of Systematic vs. Non-Systematic Mojette Transform</name>
-
-    <dl newline="false" spacing="normal">
-      <dt>Redundancy Reduction:</dt>
-      <dd>
-        Systematic Mojette coding reduces redundancy by integrating the
-        original data blocks into the encoded data, unlike non-systematic
-        codes that generate entirely new data from the original.
-      </dd>
-
-      <dt>Efficiency:</dt>
-      <dd>
-        Fewer projections need to be calculated and stored, reducing both
-        computational and storage overhead.
-      </dd>
-
-      <dt>Performance:</dt>
-      <dd>
-        Decoding is faster and simpler, especially when some original data
-        blocks are available, enabling quicker data recovery and access.
-      </dd>
-    </dl>
-
-    <t>
-      By leveraging the systematic Mojette Transform, NFS client can achieve
-      robust data protection with minimal performance impact.
-    </t>
   </section>
 
   <section anchor="xdr_desc" numbered="true" removeInRFC="false" toc="default">
