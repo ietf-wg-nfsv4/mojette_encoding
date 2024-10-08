@@ -4,7 +4,7 @@
 
 <rfc
  category="std"
- docName="draft-haynes-nfsv4-mojette-layout-VERSIONVAR"
+ docName="draft-haynes-nfsv4-mojette-encoding-VERSIONVAR"
  ipr="trust200902"
  obsoletes=""
  scripts="Common,Latin"
@@ -17,10 +17,10 @@
  xml:lang="en">
 
 <front>
-  <title abbrev="mojette-transformation">
+  <title abbrev="mojette-encoding">
     The Mojette Transformation for the Erasure Encoding of Files in NFSv4.2
   </title>
-  <seriesInfo name="Internet-Draft" value="draft-haynes-nfsv4-mojette-layout-VERSIONVAR"/>
+  <seriesInfo name="Internet-Draft" value="draft-haynes-nfsv4-mojette-encoding-VERSIONVAR"/>
   <author fullname="Thomas Haynes" initials="T." surname="Haynes">
     <organization abbrev="Hammerspace">Hammerspace</organization>
     <address>
@@ -39,6 +39,11 @@
   <keyword>NFSv4</keyword>
   <abstract>
     <t>
+      Parallel NFS (pNFS) allows a separation between the metadata (onto a
+      metadata server) and data (onto a storage device) for a file. The
+      flex file layout type version 2 further allows for erasure encoding
+      types to provide data integrity. In this document, a new erasure
+      encoding type for the Mojette Transformation is introduced.
     </t>
   </abstract>
 

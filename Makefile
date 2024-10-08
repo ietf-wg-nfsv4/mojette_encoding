@@ -6,7 +6,7 @@ MONTH=`date +%B`
 DAY=`date +%d`
 VERS=00
 
-BASEDOC=draft-haynes-nfsv4-mojette-layout
+BASEDOC=draft-haynes-nfsv4-mojette-encoding
 
 all: $(BASEDOC)-$(VERS).xml
 
