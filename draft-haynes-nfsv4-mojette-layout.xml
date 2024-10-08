@@ -17,7 +17,7 @@
  xml:lang="en">
 
 <front>
-  <title abbrev="erasure-encoding">
+  <title abbrev="mojette-transformation">
     The Mojette Transformation for the Erasure Encoding of Files in NFSv4.2
   </title>
   <seriesInfo name="Internet-Draft" value="draft-haynes-nfsv4-mojette-layout-VERSIONVAR"/>
@@ -408,6 +408,74 @@ Projection(b, p_i, q_i) =
     </section>
   </section>
 
+  <section anchor="extension" numbered="true" removeInRFC="false" toc="default">
+    <name>Extension of XDR</name>
+
+    <figure anchor='code_ff2_mojette_faulty_devices'>
+      <sourcecode type='xdr'>
+/// // X_Y: Need X+Y to write
+/// // Can lose Y files
+/// // So Y spares
+/// enum ff2_mojette_faulty_devices {
+///         FF2_MOJETTE_FAULTY_DEVICES_2_1       = 0x1;
+///         FF2_MOJETTE_FAULTY_DEVICES_4_1       = 0x2;
+///         FF2_MOJETTE_FAULTY_DEVICES_4_2       = 0x3;
+///         FF2_MOJETTE_FAULTY_DEVICES_8_1       = 0x4;
+///         FF2_MOJETTE_FAULTY_DEVICES_8_2       = 0x5;
+///         FF2_MOJETTE_FAULTY_DEVICES_8_3       = 0x6;
+///         FF2_MOJETTE_FAULTY_DEVICES_8_4       = 0x7;
+/// };
+      </sourcecode>
+    </figure>
+
+    <figure anchor='code_ff2_protection_data'>
+      <sourcecode type='xdr'>
+/// union ff2_protection_data switch (ff2_protection_type fpd_type) {
+///     case FF2_PROTECTION_TYPE_MOJETTE:
+///         uint32_t                        fpd_mojette_rsize;
+///         uint32_t                        fpd_mojette_wsize;
+///         ff2_mojette_faulty_devices
+///                       fpd_mojette_potection_configuration;
+///     case FF2_PROTECTION_TYPE_MIRRORED:
+///         void;
+/// };
+      </sourcecode>
+    </figure>
+
+    <figure anchor='code_ff_layouthint4'>
+      <sourcecode type='xdr'>
+/// union ff2_mirrors_hint switch (ff2_protection_type ffmh_type) {
+///     case FF2_PROTECTION_TYPE_MOJETTE:
+///         void;
+///     case FF2_PROTECTION_TYPE_MIRRORED:
+///         void;
+/// };
+///
+/// /*
+///  * We could have this be simply ff2_protection_type
+///  * for the client to state what protection algorithm
+///  * it wants.
+///  */
+/// struct ff2_layouthint4 {
+///     ff2_protection_type fflh_supported_types&lt;&gt;;
+///     ff2_mirrors_hint fflh_mirrors_hint;
+/// };
+
+union ff_mirrors_hint switch (bool ffmc_valid) {
+   case TRUE:
+       uint32_t    ffmc_mirrors;
+   case FALSE:
+       void;
+};
+
+struct ff_layouthint4 {
+    ff_mirrors_hint    fflh_mirrors_hint;
+};
+      </sourcecode>
+    </figure>
+
+  </section>
+
   <section anchor="xdr_desc" numbered="true" removeInRFC="false" toc="default">
     <name>Extraction of XDR</name>
     <t>
@@ -465,8 +533,27 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
   <section anchor="sec_iana" numbered="true" removeInRFC="false" toc="default">
     <name>IANA Considerations</name>
     <t>
-      There are IANA considerations.
+      This document introduces the "Flex Files V2 Erasure Encoding Type Registry". This
+      document defines the FF2_ENCODING_TYPE_MOJETTE type for Client-Side Mojette Transformations.
     </t>
+
+    <table anchor="erasure_encoding">
+      <name>Flex Files V2 Erasure Encoding Type Assignments</name>
+      <thead>
+        <tr>
+          <th>Erasure Encoding Type Name</th>
+          <th>Value</th>
+          <th>RFC</th>
+          <th>How</th>
+          <th>Minor Versions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>FF2_ENCODING_TYPE_MOJETTE</td> <td>1</td> <td>RFCTBD10</td> <td>L</td> <td>1</td>
+        </tr>
+      </tbody>
+    </table>
   </section>
 
 </middle>
@@ -506,6 +593,22 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
   </t>
   <t>
     Pierre Evenou provided the sections for the Mojette Transformation.
+  </t>
+</section>
+
+<section numbered="true" removeInRFC="true" toc="default">
+  <name>RFC Editor Notes</name>
+
+  <t>
+    [RFC Editor: prior to publishing this document as an RFC, please
+    replace all occurrences of RFCTBD10 with RFCxxxx where xxxx is the
+    RFC number of this document]
+  </t>
+
+  <t>
+    [RFC Editor: prior to publishing this document as an RFC, please
+    replace all occurrences of RFCTBD09 with RFCyyyy where yyyy is the
+    RFC number of the document: draft-haynes-nfsv4-erasure-encoding.xml]
   </t>
 </section>
 
