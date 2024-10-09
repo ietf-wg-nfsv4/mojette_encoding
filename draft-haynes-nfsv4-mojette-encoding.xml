@@ -418,14 +418,14 @@ Projection(b, p_i, q_i) =
   <section anchor="extension" numbered="true" removeInRFC="false" toc="default">
     <name>Extension of XDR</name>
 
-    <section anchor="ff2_mojette_faulty_devices" numbered="true" removeInRFC="false" toc="default">
-      <name>ff2_mojette_faulty_devices</name>
-      <figure anchor='code_ff2_mojette_faulty_devices'>
+    <section anchor="ffv2_mojette_faulty_devices" numbered="true" removeInRFC="false" toc="default">
+      <name>ffv2_mojette_faulty_devices</name>
+      <figure anchor='code_ffv2_mojette_faulty_devices'>
         <sourcecode type='xdr'>
 /// // X_Y: Need X+Y to write
 /// // Can lose Y files
 /// // So Y spares
-/// enum ff2_mojette_faulty_devices {
+/// enum ffv2_mojette_faulty_devices {
 ///         FF2_MOJETTE_FAULTY_DEVICES_2_1       = 0x1;
 ///         FF2_MOJETTE_FAULTY_DEVICES_4_1       = 0x2;
 ///         FF2_MOJETTE_FAULTY_DEVICES_4_2       = 0x3;
@@ -441,15 +441,15 @@ Projection(b, p_i, q_i) =
       </t>
     </section>
 
-    <section anchor="ff2_protection_data" numbered="true" removeInRFC="false" toc="default">
-      <name>ff2_protection_data</name>
-      <figure anchor='code_ff2_protection_data'>
+    <section anchor="ffv2_protection_data" numbered="true" removeInRFC="false" toc="default">
+      <name>ffv2_protection_data</name>
+      <figure anchor='code_ffv2_protection_data'>
         <sourcecode type='xdr'>
-/// union ff2_protection_data switch (ff2_protection_type fpd_type) {
+/// union ffv2_protection_data switch (ffv2_protection_type fpd_type) {
 ///     case FF2_PROTECTION_TYPE_MOJETTE:
 ///         uint32_t                        fpd_mojette_rsize;
 ///         uint32_t                        fpd_mojette_wsize;
-///         ff2_mojette_faulty_devices
+///         ffv2_mojette_faulty_devices
 ///                       fpd_mojette_potection_configuration;
 ///     case FF2_PROTECTION_TYPE_MIRRORED:
 ///         void;
@@ -458,11 +458,11 @@ Projection(b, p_i, q_i) =
       </figure>
     </section>
 
-    <section anchor="ff2_layouthint4" numbered="true" removeInRFC="false" toc="default">
-      <name>ff2_layouthint4</name>
-      <figure anchor='code_ff2_layouthint4'>
+    <section anchor="ffv2_layouthint4" numbered="true" removeInRFC="false" toc="default">
+      <name>ffv2_layouthint4</name>
+      <figure anchor='code_ffv2_layouthint4'>
         <sourcecode type='xdr'>
-/// union ff2_mirrors_hint switch (ff2_protection_type ffmh_type) {
+/// union ffv2_mirrors_hint switch (ffv2_protection_type ffmh_type) {
 ///     case FF2_PROTECTION_TYPE_MOJETTE:
 ///         void;
 ///     case FF2_PROTECTION_TYPE_MIRRORED:
@@ -470,13 +470,13 @@ Projection(b, p_i, q_i) =
 /// };
 ///
 /// /*
-///  * We could have this be simply ff2_protection_type
+///  * We could have this be simply ffv2_protection_type
 ///  * for the client to state what protection algorithm
 ///  * it wants.
 ///  */
-/// struct ff2_layouthint4 {
-///     ff2_protection_type fflh_supported_types&lt;&gt;;
-///     ff2_mirrors_hint fflh_mirrors_hint;
+/// struct ffv2_layouthint4 {
+///     ffv2_protection_type fflh_supported_types&lt;&gt;;
+///     ffv2_mirrors_hint fflh_mirrors_hint;
 /// };
 
 union ff_mirrors_hint switch (bool ffmc_valid) {
