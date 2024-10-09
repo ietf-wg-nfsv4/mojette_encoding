@@ -441,17 +441,17 @@ Projection(b, p_i, q_i) =
       </t>
     </section>
 
-    <section anchor="ffv2_protection_data" numbered="true" removeInRFC="false" toc="default">
-      <name>ffv2_protection_data</name>
-      <figure anchor='code_ffv2_protection_data'>
+    <section anchor="ffv2_encoding_data" numbered="true" removeInRFC="false" toc="default">
+      <name>ffv2_encoding_data</name>
+      <figure anchor='code_ffv2_encoding_data'>
         <sourcecode type='xdr'>
-/// union ffv2_protection_data switch (ffv2_protection_type fpd_type) {
-///     case FFV2_PROTECTION_TYPE_MOJETTE:
-///         uint32_t                        fpd_mojette_rsize;
-///         uint32_t                        fpd_mojette_wsize;
+/// union ffv2_encoding_data switch (ffv2_encoding_type fpd_type) {
+///     case FFV2_ENCODING_TYPE_MOJETTE:
+///         uint32_t                        fed_mojette_rsize;
+///         uint32_t                        fed_mojette_wsize;
 ///         ffv2_mojette_faulty_devices
-///                       fpd_mojette_potection_configuration;
-///     case FFV2_PROTECTION_TYPE_MIRRORED:
+///                       fed_mojette_potection_configuration;
+///     case FFV2_ENCODING_TYPE_MIRRORED:
 ///         void;
 /// };
         </sourcecode>
@@ -462,20 +462,20 @@ Projection(b, p_i, q_i) =
       <name>ffv2_layouthint4</name>
       <figure anchor='code_ffv2_layouthint4'>
         <sourcecode type='xdr'>
-/// union ffv2_mirrors_hint switch (ffv2_protection_type ffmh_type) {
-///     case FFV2_PROTECTION_TYPE_MOJETTE:
+/// union ffv2_mirrors_hint switch (ffv2_encoding_type ffmh_type) {
+///     case FFV2_ENCODING_TYPE_MOJETTE:
 ///         void;
-///     case FFV2_PROTECTION_TYPE_MIRRORED:
+///     case FFV2_ENCODING_TYPE_MIRRORED:
 ///         void;
 /// };
 ///
 /// /*
-///  * We could have this be simply ffv2_protection_type
+///  * We could have this be simply ffv2_encoding_type
 ///  * for the client to state what protection algorithm
 ///  * it wants.
 ///  */
 /// struct ffv2_layouthint4 {
-///     ffv2_protection_type fflh_supported_types&lt;&gt;;
+///     ffv2_encoding_type fflh_supported_types&lt;&gt;;
 ///     ffv2_mirrors_hint fflh_mirrors_hint;
 /// };
 
