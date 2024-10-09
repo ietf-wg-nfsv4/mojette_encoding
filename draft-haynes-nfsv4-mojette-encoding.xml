@@ -426,13 +426,13 @@ Projection(b, p_i, q_i) =
 /// // Can lose Y files
 /// // So Y spares
 /// enum ffv2_mojette_faulty_devices {
-///         FF2_MOJETTE_FAULTY_DEVICES_2_1       = 0x1;
-///         FF2_MOJETTE_FAULTY_DEVICES_4_1       = 0x2;
-///         FF2_MOJETTE_FAULTY_DEVICES_4_2       = 0x3;
-///         FF2_MOJETTE_FAULTY_DEVICES_8_1       = 0x4;
-///         FF2_MOJETTE_FAULTY_DEVICES_8_2       = 0x5;
-///         FF2_MOJETTE_FAULTY_DEVICES_8_3       = 0x6;
-///         FF2_MOJETTE_FAULTY_DEVICES_8_4       = 0x7;
+///         FFV2_MOJETTE_FAULTY_DEVICES_2_1       = 0x1;
+///         FFV2_MOJETTE_FAULTY_DEVICES_4_1       = 0x2;
+///         FFV2_MOJETTE_FAULTY_DEVICES_4_2       = 0x3;
+///         FFV2_MOJETTE_FAULTY_DEVICES_8_1       = 0x4;
+///         FFV2_MOJETTE_FAULTY_DEVICES_8_2       = 0x5;
+///         FFV2_MOJETTE_FAULTY_DEVICES_8_3       = 0x6;
+///         FFV2_MOJETTE_FAULTY_DEVICES_8_4       = 0x7;
 /// };
         </sourcecode>
       </figure>
@@ -446,12 +446,12 @@ Projection(b, p_i, q_i) =
       <figure anchor='code_ffv2_protection_data'>
         <sourcecode type='xdr'>
 /// union ffv2_protection_data switch (ffv2_protection_type fpd_type) {
-///     case FF2_PROTECTION_TYPE_MOJETTE:
+///     case FFV2_PROTECTION_TYPE_MOJETTE:
 ///         uint32_t                        fpd_mojette_rsize;
 ///         uint32_t                        fpd_mojette_wsize;
 ///         ffv2_mojette_faulty_devices
 ///                       fpd_mojette_potection_configuration;
-///     case FF2_PROTECTION_TYPE_MIRRORED:
+///     case FFV2_PROTECTION_TYPE_MIRRORED:
 ///         void;
 /// };
         </sourcecode>
@@ -463,9 +463,9 @@ Projection(b, p_i, q_i) =
       <figure anchor='code_ffv2_layouthint4'>
         <sourcecode type='xdr'>
 /// union ffv2_mirrors_hint switch (ffv2_protection_type ffmh_type) {
-///     case FF2_PROTECTION_TYPE_MOJETTE:
+///     case FFV2_PROTECTION_TYPE_MOJETTE:
 ///         void;
-///     case FF2_PROTECTION_TYPE_MIRRORED:
+///     case FFV2_PROTECTION_TYPE_MIRRORED:
 ///         void;
 /// };
 ///
@@ -555,7 +555,7 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
     <name>IANA Considerations</name>
     <t>
       This document introduces changes in the "Flex Files V2 Erasure Encoding Type Registry". This
-      document defines the FF2_ENCODING_TYPE_MOJETTE type for Client-Side Mojette Transformations.
+      document defines the FFV2_ENCODING_TYPE_MOJETTE type for Client-Side Mojette Transformations.
     </t>
 
     <table anchor="erasure_encoding">
@@ -571,7 +571,7 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
       </thead>
       <tbody>
         <tr>
-          <td>FF2_ENCODING_TYPE_MOJETTE</td> <td>1</td> <td>RFCTBD10</td> <td>L</td> <td>1</td>
+          <td>FFV2_ENCODING_TYPE_MOJETTE</td> <td>1</td> <td>RFCTBD10</td> <td>L</td> <td>1</td>
         </tr>
       </tbody>
     </table>
