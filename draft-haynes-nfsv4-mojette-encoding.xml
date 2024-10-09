@@ -463,9 +463,9 @@ Projection(b, p_i, q_i) =
       <figure anchor='code_ffv2_layouthint4'>
         <sourcecode type='xdr'>
 /// union ffv2_mirrors_hint switch (ffv2_encoding_type ffmh_type) {
-///     case FFV2_ENCODING_TYPE_MOJETTE:
-///         void;
 ///     case FFV2_ENCODING_TYPE_MIRRORED:
+///         void;
+///     case FFV2_ENCODING_TYPE_MOJETTE:
 ///         void;
 /// };
 ///
