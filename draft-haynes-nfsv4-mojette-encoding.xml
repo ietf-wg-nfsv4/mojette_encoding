@@ -76,17 +76,6 @@
       format="default" sectionFormat="of"/>.
     </t>
 
-    <section anchor="sec_defs" numbered="true" removeInRFC="false" toc="default">
-      <name>Definitions</name>
-      <dl newline="false" spacing="normal">
-        <dt>Client Side Mirroring:</dt>
-        <dd>
-          A file based replication method where copies are maintained
-          in parallel.
-        </dd>
-      </dl>
-    </section>
-
     <section numbered="true" removeInRFC="false" toc="default">
       <name>Requirements Language</name>
       <t>
