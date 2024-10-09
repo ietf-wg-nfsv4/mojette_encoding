@@ -64,6 +64,19 @@
   <section anchor="sec_intro" numbered="true" removeInRFC="false" toc="default">
     <name>Introduction</name>
     <t>
+      In Parallel NFS (pNFS) (see Section 12 of
+      <xref target="RFC8881" format="default" sectionFormat="of" />), the metadata
+      server returns layout type
+      structures that describe where file data is located.  There are
+      different layout types for different storage systems and methods
+      of arranging data on storage devices.  <xref target="RFCTBD09"
+      format="default" sectionFormat="of" /> defined the flexible
+      file layout type version 2  used with file-based data servers that are
+      accessed using the NFS protocols: NFSv3 <xref target="RFC1813"
+      format="default" sectionFormat="of" />, NFSv4.0 <xref
+      target="RFC7530" format="default" sectionFormat="of" />, NFSv4.1
+      <xref target="RFC8881" format="default" sectionFormat="of" />, and
+      NFSv4.2 <xref target="RFC7862" format="default" sectionFormat="of" />.
     </t>
 
     <t>
@@ -405,8 +418,10 @@ Projection(b, p_i, q_i) =
   <section anchor="extension" numbered="true" removeInRFC="false" toc="default">
     <name>Extension of XDR</name>
 
-    <figure anchor='code_ff2_mojette_faulty_devices'>
-      <sourcecode type='xdr'>
+    <section anchor="ff2_mojette_faulty_devices" numbered="true" removeInRFC="false" toc="default">
+      <name>ff2_mojette_faulty_devices</name>
+      <figure anchor='code_ff2_mojette_faulty_devices'>
+        <sourcecode type='xdr'>
 /// // X_Y: Need X+Y to write
 /// // Can lose Y files
 /// // So Y spares
@@ -419,11 +434,17 @@ Projection(b, p_i, q_i) =
 ///         FF2_MOJETTE_FAULTY_DEVICES_8_3       = 0x6;
 ///         FF2_MOJETTE_FAULTY_DEVICES_8_4       = 0x7;
 /// };
-      </sourcecode>
-    </figure>
+        </sourcecode>
+      </figure>
 
-    <figure anchor='code_ff2_protection_data'>
-      <sourcecode type='xdr'>
+      <t>
+      </t>
+    </section>
+
+    <section anchor="ff2_protection_data" numbered="true" removeInRFC="false" toc="default">
+      <name>ff2_protection_data</name>
+      <figure anchor='code_ff2_protection_data'>
+        <sourcecode type='xdr'>
 /// union ff2_protection_data switch (ff2_protection_type fpd_type) {
 ///     case FF2_PROTECTION_TYPE_MOJETTE:
 ///         uint32_t                        fpd_mojette_rsize;
@@ -433,11 +454,14 @@ Projection(b, p_i, q_i) =
 ///     case FF2_PROTECTION_TYPE_MIRRORED:
 ///         void;
 /// };
-      </sourcecode>
-    </figure>
+        </sourcecode>
+      </figure>
+    </section>
 
-    <figure anchor='code_ff_layouthint4'>
-      <sourcecode type='xdr'>
+    <section anchor="ff2_layouthint4" numbered="true" removeInRFC="false" toc="default">
+      <name>ff2_layouthint4</name>
+      <figure anchor='code_ff2_layouthint4'>
+        <sourcecode type='xdr'>
 /// union ff2_mirrors_hint switch (ff2_protection_type ffmh_type) {
 ///     case FF2_PROTECTION_TYPE_MOJETTE:
 ///         void;
@@ -465,8 +489,9 @@ union ff_mirrors_hint switch (bool ffmc_valid) {
 struct ff_layouthint4 {
     ff_mirrors_hint    fflh_mirrors_hint;
 };
-      </sourcecode>
-    </figure>
+        </sourcecode>
+      </figure>
+    </section>
 
   </section>
 
@@ -503,9 +528,11 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
     <t>
       Note that the XDR code contained in this document depends on types
       from the NFSv4.2 nfs4_prot.x file (generated from
-      <xref target="RFC7863" format="default" sectionFormat="of"/>)
-      and the Flex Files Layout Type flexfiles.x file (generated from
-      <xref target="RFC8435" format="default" sectionFormat="of"/>).
+      <xref target="RFC7863" format="default" sectionFormat="of"/>),
+      the Flex Files Layout Type flexfiles.x file (generated from
+      <xref target="RFC8435" format="default" sectionFormat="of"/>), and
+      the Flex Files Layout Type version 2 flexfilesv2.x (generated from
+      <xref target="RFCTBD09" format="default" sectionFormat="of"/>).
       This includes both nfs types that end with a 4, such as offset4,
       length4, etc., as well as more generic types such as uint32_t and
       uint64_t.
@@ -527,7 +554,7 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
   <section anchor="sec_iana" numbered="true" removeInRFC="false" toc="default">
     <name>IANA Considerations</name>
     <t>
-      This document introduces the "Flex Files V2 Erasure Encoding Type Registry". This
+      This document introduces changes in the "Flex Files V2 Erasure Encoding Type Registry". This
       document defines the FF2_ENCODING_TYPE_MOJETTE type for Client-Side Mojette Transformations.
     </t>
 
@@ -564,6 +591,8 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4506.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7530.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7862.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7863.xml"/>
@@ -575,6 +604,20 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8435.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml"/>
+    <reference anchor="RFCTBD09" target="https://www.ietf.org/archive/id/draft-haynes-nfsv4-erasure-encoding-00.xml">
+      <front>
+        <title abbrev="Erasure Encoding">Erasure Encoding of Files in NFSv4.2</title>
+        <author fullname="Thomas Haynes" initials="T." surname="Haynes">
+          <organization>IETF Trust</organization>
+        </author>
+        <date month="October" year="2024"/>
+      </front>
+    </reference>
+  </references>
+    <references>
+  <name>Informative References</name>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1813.xml"/>
   </references>
 </references>
 
@@ -584,9 +627,6 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
     The following from Hammerspace were instrumental in driving
     Flex Files v2: David Flynn, Trond Myklebust, Tom Haynes, Didier Feron,
     Jean-Pierre Monchanin, Pierre Evenou, and Brian Pawlowski.
-  </t>
-  <t>
-    Pierre Evenou provided the sections for the Mojette Transformation.
   </t>
 </section>
 
