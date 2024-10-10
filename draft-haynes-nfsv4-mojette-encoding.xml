@@ -14,6 +14,7 @@
  tocDepth="3"
  tocInclude="true"
  version="3"
+ consensus="true"
  xml:lang="en">
 
 <front>
@@ -70,13 +71,15 @@
       structures that describe where file data is located.  There are
       different layout types for different storage systems and methods
       of arranging data on storage devices.  <xref target="RFCTBD09"
-      format="default" sectionFormat="of" /> defined the flexible
-      file layout type version 2  used with file-based data servers that are
+      format="default" sectionFormat="of" /> defined the Flexible
+      File Layout Type Version 2  used with file-based data servers that are
       accessed using the NFS protocols: NFSv3 <xref target="RFC1813"
       format="default" sectionFormat="of" />, NFSv4.0 <xref
       target="RFC7530" format="default" sectionFormat="of" />, NFSv4.1
       <xref target="RFC8881" format="default" sectionFormat="of" />, and
       NFSv4.2 <xref target="RFC7862" format="default" sectionFormat="of" />.
+      This document introduces a new Erasure Encoding Type called Mojette
+      Transformation.
     </t>
 
     <t>
@@ -422,9 +425,6 @@ Projection(b, p_i, q_i) =
       <name>ffv2_mojette_faulty_devices</name>
       <figure anchor='code_ffv2_mojette_faulty_devices'>
         <sourcecode type='xdr'>
-/// // X_Y: Need X+Y to write
-/// // Can lose Y files
-/// // So Y spares
 /// enum ffv2_mojette_faulty_devices {
 ///         FFV2_MOJETTE_FAULTY_DEVICES_2_1       = 0x1;
 ///         FFV2_MOJETTE_FAULTY_DEVICES_4_1       = 0x2;
@@ -438,6 +438,16 @@ Projection(b, p_i, q_i) =
       </figure>
 
       <t>
+        The ffv2_mojette_faulty_devices (see <xref target='code_ffv2_mojette_faulty_devices' />)
+        can be used in both the layout_hint (see both Section 5.12.4 of <xref target="RFC8881" format="default" sectionFormat="of" />
+        and Section XXX of <xref target="RFCTBD09" format="default" sectionFormat="of"/>) and
+        the ffl_encoding_type_data (see Section YYY of <xref target="RFCTBD09" format="default" sectionFormat="of"/>)
+        to convey the distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
+        blocks (see Section XXX of <xref target="RFCTBD09" format="default" sectionFormat="of"/>)
+        in the layouts for the Flexible File Layout Type Version 2. The name of
+        each of the enum targets ends with 'X_Y', which states that there is a need
+        for X+Y files to compose the projection. X is the number of FFV2_DS_FLAGS_ACTIVE
+        blocks and Y is the number of FFV2_DS_FLAGS_SPARE blocks.
       </t>
     </section>
 
@@ -445,54 +455,32 @@ Projection(b, p_i, q_i) =
       <name>ffv2_encoding_data</name>
       <figure anchor='code_ffv2_encoding_data'>
         <sourcecode type='xdr'>
-/// union ffv2_encoding_data switch (ffv2_encoding_type fpd_type) {
+/// union ffv2_encoding_type_data
+///          switch (ffv2_encoding_type fetd_type) {
+///     case FFV2_ENCODING_TYPE_MIRRORED:
+///         void;
 ///     case FFV2_ENCODING_TYPE_MOJETTE:
-///         uint32_t                        fed_mojette_rsize;
-///         uint32_t                        fed_mojette_wsize;
+///         uint32_t                        fetd_mojette_rsize;
+///         uint32_t                        fetd_mojette_wsize;
 ///         ffv2_mojette_faulty_devices
-///                       fed_mojette_potection_configuration;
-///     case FFV2_ENCODING_TYPE_MIRRORED:
-///         void;
+///                       fetd_mojette_potection_configuration;
 /// };
         </sourcecode>
       </figure>
+
+      <t>
+        This addition of FFV2_ENCODING_TYPE_MOJETTE to the ffv2_encoding_data (see
+        <xref target='code_ffv2_encoding_data' />) allows for the metadata server
+        to inform the client as to the expected buffer sizes for the new
+        NFSv4.2 operations in <xref target="RFCTBD09" format="default" sectionFormat="of"/>
+        and the expected distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
+        blocks inside the ffm_data_servers arm for the FFV2_ENCODING_TYPE_MOJETTE erasure
+        encoding type. Note that as the operations transfer projection blocks and not
+        bytes, the client must fit the number of projection blocks times the average size
+        of the projection blocks into its calculation of projection blocks to send
+        or request.
+      </t>
     </section>
-
-    <section anchor="ffv2_layouthint4" numbered="true" removeInRFC="false" toc="default">
-      <name>ffv2_layouthint4</name>
-      <figure anchor='code_ffv2_layouthint4'>
-        <sourcecode type='xdr'>
-/// union ffv2_mirrors_hint switch (ffv2_encoding_type ffmh_type) {
-///     case FFV2_ENCODING_TYPE_MIRRORED:
-///         void;
-///     case FFV2_ENCODING_TYPE_MOJETTE:
-///         void;
-/// };
-///
-/// /*
-///  * We could have this be simply ffv2_encoding_type
-///  * for the client to state what protection algorithm
-///  * it wants.
-///  */
-/// struct ffv2_layouthint4 {
-///     ffv2_encoding_type fflh_supported_types&lt;&gt;;
-///     ffv2_mirrors_hint fflh_mirrors_hint;
-/// };
-
-union ff_mirrors_hint switch (bool ffmc_valid) {
-   case TRUE:
-       uint32_t    ffmc_mirrors;
-   case FALSE:
-       void;
-};
-
-struct ff_layouthint4 {
-    ff_mirrors_hint    fflh_mirrors_hint;
-};
-        </sourcecode>
-      </figure>
-    </section>
-
   </section>
 
   <section anchor="xdr_desc" numbered="true" removeInRFC="false" toc="default">
