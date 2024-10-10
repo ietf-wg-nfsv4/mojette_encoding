@@ -436,8 +436,8 @@ Projection(b, p_i, q_i) =
     </section>
   </section>
 
-  <section anchor='extension' numbered='true' removeInRFC='false' toc='default'>
-    <name>Extension of XDR</name>
+  <section anchor="extension" numbered="true" removeInRFC="false" toc="default">
+    <name>Extension of Flexible File Layout Type Version 2 Encoding Type</name>
 
     <section anchor='ffv2_encoding_type' numbered='true' removeInRFC='false' toc='default'>
       <name>ffv2_encoding_type</name>
