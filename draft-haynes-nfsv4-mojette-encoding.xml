@@ -92,6 +92,24 @@
       format='default' sectionFormat='of'/>.
     </t>
 
+    <section anchor='notations' numbered='true' removeInRFC='false' toc='default'>
+      <name>Notations</name>
+
+      <dl newline='false' spacing='normal'>
+        <dt>x_i:</dt>
+        <dd>
+          The ith value of x.
+        </dd>
+        <dt>sum_{x=0}^{10} f(x_i):</dt>
+        <dd>
+          The sum of the function f applied to the values of x ranging
+          from 0 to 10. I.e, The first '{}' describes the lower range
+          of x and the second '{}' describes the upper range of x.
+        </dd>
+      </dl>
+
+    </section>
+
     <section numbered='true' removeInRFC='false' toc='default'>
       <name>Requirements Language</name>
       <t>
@@ -162,7 +180,7 @@ Size of projection = (P - 1) x |q| + (Q - 1) * |p| + 1
         <figure anchor='projection'>
           <artwork>
 Projection(b, p_i, q_i) =
-    \sum_{k=0}^{Q-1} \sum_{l=0}^{P-1}
+    sum_{k=0}^{Q-1} sum_{l=0}^{P-1}
             Data(k, l) x Delta(b - l x p_i + k x q_i)
           </artwork>
         </figure>
