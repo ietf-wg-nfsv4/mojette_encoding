@@ -509,6 +509,19 @@ Projection(b, p_i, q_i) =
     </section>
   </section>
 
+  <section anchor='examples' numbered='true' removeInRFC='false' toc='default'>
+    <name>Examples Tying It All Together</name>
+
+    <section anchor='Block_Sizes' numbered='true' removeInRFC='false' toc='default'>
+    <name>Block_Sizes</name>
+      <t>
+        Consider a FFV2_ENCODING_MOJETTE_SYSTEMATIC encoding type with
+        a ffv2_mojette_faulty_devices of FFV2_MOJETTE_FAULTY_DEVICES_4_2. It needs
+        4 active blocks and 2 spare blocks in the payload.
+      </t>
+    </section>
+  </section>
+
   <section anchor='xdr_desc' numbered='true' removeInRFC='false' toc='default'>
     <name>Extraction of XDR</name>
     <t>
