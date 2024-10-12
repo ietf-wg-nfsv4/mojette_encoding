@@ -421,6 +421,30 @@ Projection(b, p_i, q_i) =
   <section anchor="extension" numbered="true" removeInRFC="false" toc="default">
     <name>Extension of XDR</name>
 
+    <section anchor='ffv2_encoding_type' numbered='true' removeInRFC='false' toc='default'>
+      <name>ffv2_encoding_type</name>
+
+      <figure anchor='code_ffv2_encoding_type'>
+        <sourcecode type='xdr'>
+   /// enum ffv2_encoding_type {
+   ///     FFV2_ENCODING_MIRRORED               = 0x1;
+   ///     FFV2_ENCODING_MOJETTE_SYSTEMATIC     = 0x2;
+   ///     FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC = 0x3;
+   /// };
+        </sourcecode>
+      </figure>
+
+      <t>
+        ffv2_encoding_type is extended in <xref target='code_ffv2_encoding_type' />
+        to introduce two different erasure encoding types: FFV2_ENCODING_MOJETTE_SYSTEMATIC
+        and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC. They are intoduced at this
+        level instead of at the ffv2_encoding_data (see <xref target='code_ffv2_encoding_type_data' />)
+        in order for the client to negotiate the support of one over the other
+        with the NFS4ERR_ERASURE_ENCODING_NOT_SUPPORTED error (see Section ZZZ
+        of <xref target="RFCTBD09" format="default" sectionFormat="of"/>).
+      </t>
+    </section>
+
     <section anchor="ffv2_mojette_faulty_devices" numbered="true" removeInRFC="false" toc="default">
       <name>ffv2_mojette_faulty_devices</name>
       <figure anchor='code_ffv2_mojette_faulty_devices'>
@@ -453,13 +477,14 @@ Projection(b, p_i, q_i) =
 
     <section anchor="ffv2_encoding_data" numbered="true" removeInRFC="false" toc="default">
       <name>ffv2_encoding_data</name>
-      <figure anchor='code_ffv2_encoding_data'>
+      <figure anchor='code_ffv2_encoding_type_data'>
         <sourcecode type='xdr'>
 /// union ffv2_encoding_type_data
 ///          switch (ffv2_encoding_type fetd_type) {
-///     case FFV2_ENCODING_TYPE_MIRRORED:
+///     case FFV2_ENCODING_MIRRORED:
 ///         void;
-///     case FFV2_ENCODING_TYPE_MOJETTE:
+///     case FFV2_ENCODING_MOJETTE_SYSTEMATIC:
+///     case FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC:
 ///         uint32_t                        fetd_mojette_rsize;
 ///         uint32_t                        fetd_mojette_wsize;
 ///         ffv2_mojette_faulty_devices
@@ -469,13 +494,14 @@ Projection(b, p_i, q_i) =
       </figure>
 
       <t>
-        This addition of FFV2_ENCODING_TYPE_MOJETTE to the ffv2_encoding_data (see
-        <xref target='code_ffv2_encoding_data' />) allows for the metadata server
+        This addition of FFV2_ENCODING_MOJETTE_SYSTEMATIC and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC
+        to the ffv2_encoding_type_data (see
+        <xref target='code_ffv2_encoding_type_data' />) allows for the metadata server
         to inform the client as to the expected buffer sizes for the new
         NFSv4.2 operations in <xref target="RFCTBD09" format="default" sectionFormat="of"/>
         and the expected distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
-        blocks inside the ffm_data_servers arm for the FFV2_ENCODING_TYPE_MOJETTE erasure
-        encoding type. Note that as the operations transfer projection blocks and not
+        blocks inside the ffm_data_servers arm for the Mojette erasure
+        encoding types. Note that as the operations transfer projection blocks and not
         bytes, the client must fit the number of projection blocks times the average size
         of the projection blocks into its calculation of projection blocks to send
         or request.
@@ -505,7 +531,7 @@ grep '^ *///' $* | sed 's?^ */// ??' | sed 's?^ *///$??'
       this document is in a file called "spec.txt", then the reader can do:
     </t>
     <sourcecode name="" type="" markers="true"><![CDATA[
-sh extract.sh < spec.txt > erasure_coding_prot.x
+sh extract.sh < spec.txt > mojette_encoding_prot.x
     ]]>
     </sourcecode>
     <t>
@@ -543,7 +569,8 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
     <name>IANA Considerations</name>
     <t>
       This document introduces changes in the "Flex Files V2 Erasure Encoding Type Registry". This
-      document defines the FFV2_ENCODING_TYPE_MOJETTE type for Client-Side Mojette Transformations.
+      document defines both the FFV2_ENCODING_MOJETTE_SYSTEMATIC and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC
+      types for Client-Side Mojette Transformations.
     </t>
 
     <table anchor="erasure_encoding">
@@ -559,7 +586,10 @@ sh extract.sh < spec.txt > erasure_coding_prot.x
       </thead>
       <tbody>
         <tr>
-          <td>FFV2_ENCODING_TYPE_MOJETTE</td> <td>1</td> <td>RFCTBD10</td> <td>L</td> <td>1</td>
+          <td>FFV2_ENCODING_MOJETTE_SYSTEMATIC</td> <td>2</td> <td>RFCTBD10</td> <td>L</td> <td>2</td>
+        </tr>
+        <tr>
+          <td>FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC</td> <td>3</td> <td>RFCTBD10</td> <td>L</td> <td>2</td>
         </tr>
       </tbody>
     </table>
