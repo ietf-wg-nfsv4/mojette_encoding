@@ -593,6 +593,10 @@ sh extract.sh < spec.txt > mojette_encoding_prot.x
   <section anchor='sec_security' numbered='true' removeInRFC='false' toc='default'>
     <name>Security Considerations</name>
     <t>
+      This document has the same security considerations as both Flex Files
+      Layout Type version 1 (see Section 15 of <xref target='RFC8435'
+      format='default' sectionFormat='of' />) and NFSv4.2 (see Section 17 of <xref
+      target='RFC7862' format='default' sectionFormat='of' />).
     </t>
   </section>
 
