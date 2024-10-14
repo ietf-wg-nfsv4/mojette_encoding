@@ -72,7 +72,7 @@
       different layout types for different storage systems and methods
       of arranging data on storage devices.  <xref target='RFCTBD09'
       format='default' sectionFormat='of' /> defined the Flexible
-      File Layout Type Version 2  used with file-based data servers that are
+      File Version 2 Layout Type  used with file-based data servers that are
       accessed using the NFS protocols: NFSv3 <xref target='RFC1813'
       format='default' sectionFormat='of' />, NFSv4.0 <xref
       target='RFC7530' format='default' sectionFormat='of' />, NFSv4.1
@@ -486,7 +486,7 @@ Projection(b, p_i, q_i) =
         the ffl_encoding_type_data (see Section YYY of <xref target='RFCTBD09' format='default' sectionFormat='of'/>)
         to convey the distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
         blocks (see Section XXX of <xref target='RFCTBD09' format='default' sectionFormat='of'/>)
-        in the layouts for the Flexible File Layout Type Version 2. The name of
+        in the layouts for the Flexible File Version 2 Layout Type. The name of
         each of the enum targets ends with 'X_Y', which states that there is a need
         for X+Y files to compose the projection. X is the number of FFV2_DS_FLAGS_ACTIVE
         blocks and Y is the number of FFV2_DS_FLAGS_SPARE blocks.
@@ -704,7 +704,8 @@ sh extract.sh < spec.txt > mojette_encoding_prot.x
   <name>Acknowledgments</name>
   <t>
     The following from Hammerspace were instrumental in driving
-    Flex Files v2: David Flynn, Trond Myklebust, Tom Haynes, Didier Feron,
+    the incorporation of the Mojette Transformation into
+    an encoding type for Flexible Files Version 2 Layout Type: David Flynn, Trond Myklebust, Tom Haynes, Didier Feron,
     Jean-Pierre Monchanin, Pierre Evenou, and Brian Pawlowski.
   </t>
 </section>
