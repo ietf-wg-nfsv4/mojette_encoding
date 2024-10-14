@@ -173,7 +173,7 @@
 
         <figure anchor='size_of_projection'>
           <artwork>
-Size of projection = (P - 1) x |q| + (Q - 1) * |p| + 1
+Size of projection = (P - 1) x |q_i| + (Q - 1) * |p_i| + 1
           </artwork>
         </figure>
 
