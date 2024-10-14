@@ -527,33 +527,30 @@ Projection(b, p_i, q_i) =
     <section anchor='Block_Sizes' numbered='true' removeInRFC='false' toc='default'>
     <name>Block_Sizes</name>
       <t>
-        Consider a FFV2_ENCODING_MOJETTE_SYSTEMATIC encoding type with
-        a ffv2_mojette_faulty_devices of FFV2_MOJETTE_FAULTY_DEVICES_4_2. It needs
-        4 active blocks and 2 spare blocks in the payload. As can be seen
+        Consider a FFV2_ENCODING_MOJETTE_SYSTEMATIC encoding type which
+        needs
+        6 active blocks and 2 spare blocks in the payload (Not a valid 
+        ffv2_mojette_faulty_devices, but needed to show varied block sizes). As can be seen
         in <xref target='example_block_sizes'/> , 4kB data blocks need blocks
         about 1kB in size. But not all blocks are the same size.
-
-        <cref anchor='AI1' source='TH'>
-          Adjust to reality!
-        </cref>
       </t>
 
     <table anchor='example_block_sizes'>
       <name>Example sizes of a Mojette Projection</name>
       <thead>
         <tr>
-          <th>Projection ID</th><th>0</th> <th>1</th> <th>2</th> <th>3</th> <th>4</th> <th>5</th>
+          <th>Projection ID</th><th>0</th> <th>1</th> <th>2</th> <th>3</th> <th>4</th> <th>5</th> <th>6</th> <th>7</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>p value</td><td>-3</td> <td>-2</td> <td>-1</td> <td>0</td> <td>1</td> <td>2</td>
+          <td>p value</td><td>-3</td> <td>-2</td> <td>-1</td> <td>0</td> <td>1</td> <td>2</td> <td>0</td> <td>0</td>
         </tr>
         <tr>
-          <td>q value</td><td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td>
+          <td>q value</td><td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>0</td> <td>0</td>
         </tr>
         <tr>
-          <td>size (bytes)</td><td>1048</td> <td>1080</td> <td>1080</td> <td>1048</td> <td>1064</td> <td>1048</td>
+          <td>size (bytes)</td><td>1048</td> <td>1080</td> <td>1080</td> <td>1048</td> <td>1064</td> <td>1048</td> <td>0</td> <td>0</td>
         </tr>
       </tbody>
     </table>
