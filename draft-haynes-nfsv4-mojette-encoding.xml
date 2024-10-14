@@ -503,8 +503,6 @@ Projection(b, p_i, q_i) =
 ///         void;
 ///     case FFV2_ENCODING_MOJETTE_SYSTEMATIC:
 ///     case FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC:
-///         uint32_t                        fetd_mojette_rsize;
-///         uint32_t                        fetd_mojette_wsize;
 ///         ffv2_mojette_faulty_devices
 ///                       fetd_mojette_potection_configuration;
 /// };
@@ -515,14 +513,10 @@ Projection(b, p_i, q_i) =
         This addition of FFV2_ENCODING_MOJETTE_SYSTEMATIC and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC
         to the ffv2_encoding_type_data (see
         <xref target='code_ffv2_encoding_type_data' />) allows for the metadata server
-        to inform the client as to the expected buffer sizes for the new
-        NFSv4.2 operations in <xref target='RFCTBD09' format='default' sectionFormat='of'/>
-        and the expected distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
+        to inform the client as to the
+        expected distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
         blocks inside the ffm_data_servers arm for the Mojette erasure
-        encoding types. Note that as the operations transfer projection blocks and not
-        bytes, the client must fit the number of projection blocks times the average size
-        of the projection blocks into its calculation of projection blocks to send
-        or request.
+        encoding types.
       </t>
     </section>
   </section>
