@@ -527,7 +527,7 @@ Projection(b, p_i, q_i) =
     <section anchor='Block_Sizes' numbered='true' removeInRFC='false' toc='default'>
     <name>Block_Sizes</name>
       <t>
-        Consider a FFV2_ENCODING_MOJETTE_SYSTEMATIC encoding type which
+        Consider a FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC encoding type which
         needs
         6 active blocks and 2 spare blocks in the payload (Not a valid 
         ffv2_mojette_faulty_devices, but needed to show varied block sizes). As can be seen
