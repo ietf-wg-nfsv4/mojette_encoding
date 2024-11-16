@@ -463,11 +463,11 @@ Projection(b, p_i, q_i) =
       </t>
     </section>
 
-    <section anchor='ffv2_mojette_faulty_devices' numbered='true' removeInRFC='false' toc='default'>
-      <name>ffv2_mojette_faulty_devices</name>
-      <figure anchor='code_ffv2_mojette_faulty_devices'>
+    <section anchor='ffv2_mojette_faulty_devices4' numbered='true' removeInRFC='false' toc='default'>
+      <name>ffv2_mojette_faulty_devices4</name>
+      <figure anchor='code_ffv2_mojette_faulty_devices4'>
         <sourcecode type='xdr'>
-/// enum ffv2_mojette_faulty_devices {
+/// enum ffv2_mojette_faulty_devices4 {
 ///         FFV2_MOJETTE_FAULTY_DEVICES_2_1       = 0x1;
 ///         FFV2_MOJETTE_FAULTY_DEVICES_4_1       = 0x2;
 ///         FFV2_MOJETTE_FAULTY_DEVICES_4_2       = 0x3;
@@ -480,7 +480,7 @@ Projection(b, p_i, q_i) =
       </figure>
 
       <t>
-        The ffv2_mojette_faulty_devices (see <xref target='code_ffv2_mojette_faulty_devices' />)
+        The ffv2_mojette_faulty_devices4 (see <xref target='code_ffv2_mojette_faulty_devices4' />)
         can be used in both the layout_hint (see both Section 5.12.4 of <xref target='RFC8881' format='default' sectionFormat='of' />
         and Section XXX of <xref target='RFCTBD09' format='default' sectionFormat='of'/>) and
         the ffl_encoding_type_data (see Section YYY of <xref target='RFCTBD09' format='default' sectionFormat='of'/>)
@@ -503,7 +503,7 @@ Projection(b, p_i, q_i) =
 ///         void;
 ///     case FFV2_ENCODING_MOJETTE_SYSTEMATIC:
 ///     case FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC:
-///         ffv2_mojette_faulty_devices
+///         ffv2_mojette_faulty_devices4
 ///                       fetd_mojette_potection_configuration;
 /// };
         </sourcecode>
@@ -530,7 +530,7 @@ Projection(b, p_i, q_i) =
         Consider a FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC encoding type which
         needs
         6 active blocks and 2 spare blocks in the payload (Not a valid 
-        ffv2_mojette_faulty_devices, but needed to show varied block sizes). As can be seen
+        ffv2_mojette_faulty_devices4, but needed to show varied block sizes). As can be seen
         in <xref target='example_block_sizes'/> , 4kB data blocks need blocks
         about 1kB in size. But not all blocks are the same size.
       </t>
