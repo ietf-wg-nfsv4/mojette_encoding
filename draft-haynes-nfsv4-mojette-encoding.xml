@@ -456,7 +456,7 @@ Projection(b, p_i, q_i) =
         ffv2_encoding_type is extended in <xref target='code_ffv2_encoding_type' />
         to introduce two different erasure encoding types: FFV2_ENCODING_MOJETTE_SYSTEMATIC
         and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC. They are intoduced at this
-        level instead of at the ffv2_encoding_data (see <xref target='code_ffv2_encoding_type_data' />)
+        level instead of at the ffv2_encoding_data (see <xref target='code_ffv2_encoding_type_data4' />)
         in order for the client to negotiate the support of one over the other
         with the NFS4ERR_ERASURE_ENCODING_NOT_SUPPORTED error (see Section ZZZ
         of <xref target='RFCTBD09' format='default' sectionFormat='of'/>).
@@ -493,11 +493,11 @@ Projection(b, p_i, q_i) =
       </t>
     </section>
 
-    <section anchor='ffv2_encoding_data' numbered='true' removeInRFC='false' toc='default'>
-      <name>ffv2_encoding_data</name>
-      <figure anchor='code_ffv2_encoding_type_data'>
+    <section anchor='ffv2_encoding_type_data4' numbered='true' removeInRFC='false' toc='default'>
+      <name>ffv2_encoding_type_data4</name>
+      <figure anchor='code_ffv2_encoding_type_data4'>
         <sourcecode type='xdr'>
-/// union ffv2_encoding_type_data
+/// union ffv2_encoding_type_data4
 ///          switch (ffv2_encoding_type fetd_type) {
 ///     case FFV2_ENCODING_MIRRORED:
 ///         void;
@@ -511,8 +511,8 @@ Projection(b, p_i, q_i) =
 
       <t>
         This addition of FFV2_ENCODING_MOJETTE_SYSTEMATIC and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC
-        to the ffv2_encoding_type_data (see
-        <xref target='code_ffv2_encoding_type_data' />) allows for the metadata server
+        to the ffv2_encoding_type_data4 (see
+        <xref target='code_ffv2_encoding_type_data4' />) allows for the metadata server
         to inform the client as to the
         expected distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
         blocks inside the ffm_data_servers arm for the Mojette erasure
