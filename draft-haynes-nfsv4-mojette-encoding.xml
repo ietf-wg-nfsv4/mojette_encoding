@@ -456,7 +456,7 @@ Projection(b, p_i, q_i) =
         ffv2_encoding_type4 is extended in <xref target='code_ffv2_encoding_type4' />
         to introduce two different erasure encoding types: FFV2_ENCODING_MOJETTE_SYSTEMATIC
         and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC. They are intoduced at this
-        level instead of at the ffv2_encoding_data (see <xref target='code_ffv2_encoding_type_data4' />)
+        level instead of at the ffv2_encoding_type_data4 (see <xref target='code_ffv2_encoding_type_data4' />)
         in order for the client to negotiate the support of one over the other
         with the NFS4ERR_ERASURE_ENCODING_NOT_SUPPORTED error (see Section ZZZ
         of <xref target='RFCTBD09' format='default' sectionFormat='of'/>).
