@@ -439,12 +439,12 @@ Projection(b, p_i, q_i) =
   <section anchor="extension" numbered="true" removeInRFC="false" toc="default">
     <name>Extension of Flexible File Layout Type Version 2 Encoding Type</name>
 
-    <section anchor='ffv2_encoding_type' numbered='true' removeInRFC='false' toc='default'>
-      <name>ffv2_encoding_type</name>
+    <section anchor='ffv2_encoding_type4' numbered='true' removeInRFC='false' toc='default'>
+      <name>ffv2_encoding_type4</name>
 
-      <figure anchor='code_ffv2_encoding_type'>
+      <figure anchor='code_ffv2_encoding_type4'>
         <sourcecode type='xdr'>
-   /// enum ffv2_encoding_type {
+   /// enum ffv2_encoding_type4 {
    ///     FFV2_ENCODING_MIRRORED               = 0x1;
    ///     FFV2_ENCODING_MOJETTE_SYSTEMATIC     = 0x2;
    ///     FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC = 0x3;
@@ -453,7 +453,7 @@ Projection(b, p_i, q_i) =
       </figure>
 
       <t>
-        ffv2_encoding_type is extended in <xref target='code_ffv2_encoding_type' />
+        ffv2_encoding_type4 is extended in <xref target='code_ffv2_encoding_type4' />
         to introduce two different erasure encoding types: FFV2_ENCODING_MOJETTE_SYSTEMATIC
         and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC. They are intoduced at this
         level instead of at the ffv2_encoding_data (see <xref target='code_ffv2_encoding_type_data4' />)
@@ -498,7 +498,7 @@ Projection(b, p_i, q_i) =
       <figure anchor='code_ffv2_encoding_type_data4'>
         <sourcecode type='xdr'>
 /// union ffv2_encoding_type_data4
-///          switch (ffv2_encoding_type fetd_type) {
+///          switch (ffv2_encoding_type4 fetd_type) {
 ///     case FFV2_ENCODING_MIRRORED:
 ///         void;
 ///     case FFV2_ENCODING_MOJETTE_SYSTEMATIC:
