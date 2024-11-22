@@ -70,7 +70,7 @@
       server returns layout type
       structures that describe where file data is located.  There are
       different layout types for different storage systems and methods
-      of arranging data on storage devices.  <xref target='RFCTBD09'
+      of arranging data on storage devices.  <xref target='I-D.haynes-nfsv4-erasure-encoding'
       format='default' sectionFormat='of' /> defined the Flexible
       File Version 2 Layout Type  used with file-based data servers that are
       accessed using the NFS protocols: NFSv3 <xref target='RFC1813'
@@ -459,7 +459,7 @@ Projection(b, p_i, q_i) =
         level instead of at the ffv2_encoding_type_data4 (see <xref target='code_ffv2_encoding_type_data4' />)
         in order for the client to negotiate the support of one over the other
         with the NFS4ERR_ERASURE_ENCODING_NOT_SUPPORTED error (see Section ZZZ
-        of <xref target='RFCTBD09' format='default' sectionFormat='of'/>).
+        of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>).
       </t>
     </section>
 
@@ -482,10 +482,10 @@ Projection(b, p_i, q_i) =
       <t>
         The ffv2_mojette_faulty_devices4 (see <xref target='code_ffv2_mojette_faulty_devices4' />)
         can be used in both the layout_hint (see both Section 5.12.4 of <xref target='RFC8881' format='default' sectionFormat='of' />
-        and Section XXX of <xref target='RFCTBD09' format='default' sectionFormat='of'/>) and
-        the ffl_encoding_type_data (see Section YYY of <xref target='RFCTBD09' format='default' sectionFormat='of'/>)
+        and Section XXX of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>) and
+        the ffl_encoding_type_data (see Section YYY of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>)
         to convey the distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
-        blocks (see Section XXX of <xref target='RFCTBD09' format='default' sectionFormat='of'/>)
+        blocks (see Section XXX of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>)
         in the layouts for the Flexible File Version 2 Layout Type. The name of
         each of the enum targets ends with 'X_Y', which states that there is a need
         for X+Y files to compose the projection. X is the number of FFV2_DS_FLAGS_ACTIVE
@@ -594,7 +594,7 @@ sh extract.sh < spec.txt > mojette_encoding_prot.x
       the Flex Files Layout Type flexfiles.x file (generated from
       <xref target='RFC8435' format='default' sectionFormat='of'/>), and
       the Flex Files Layout Type version 2 flexfilesv2.x (generated from
-      <xref target='RFCTBD09' format='default' sectionFormat='of'/>).
+      <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>).
       This includes both nfs types that end with a 4, such as offset4,
       length4, etc., as well as more generic types such as uint32_t and
       uint64_t.
@@ -674,19 +674,12 @@ sh extract.sh < spec.txt > mojette_encoding_prot.x
        href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8435.xml'/>
     <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
        href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml'/>
-    <reference anchor='RFCTBD09' target='https://www.ietf.org/archive/id/draft-haynes-nfsv4-erasure-encoding-00.xml'>
-      <front>
-        <title abbrev='Erasure Encoding'>Erasure Encoding of Files in NFSv4.2</title>
-        <author fullname='Thomas Haynes' initials='T.' surname='Haynes'>
-          <organization>IETF Trust</organization>
-        </author>
-        <date month='October' year='2024'/>
-      </front>
-    </reference>
-  </references>
-    <references>
-  <name>Informative References</name>
     <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+      href='https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.haynes-nfsv4-erasure-encoding.xml'/>
+  </references>
+  <references>
+  <name>Informative References</name>
+     <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
        href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1813.xml'/>
   </references>
 </references>
@@ -712,7 +705,7 @@ sh extract.sh < spec.txt > mojette_encoding_prot.x
 
   <t>
     [RFC Editor: prior to publishing this document as an RFC, please
-    replace all occurrences of RFCTBD09 with RFCyyyy where yyyy is the
+    replace all occurrences of I-D.haynes-nfsv4-erasure-encoding with RFCyyyy where yyyy is the
     RFC number of the document: draft-haynes-nfsv4-erasure-encoding.xml]
   </t>
 </section>
