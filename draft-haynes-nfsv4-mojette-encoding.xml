@@ -3,470 +3,470 @@
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt'?>
 
 <rfc
- category='std'
- docName='draft-haynes-nfsv4-mojette-encoding-VERSIONVAR'
- ipr='trust200902'
- obsoletes=''
- scripts='Common,Latin'
- sortRefs='true'
- submissionType='IETF'
- symRefs='true'
- tocDepth='3'
- tocInclude='true'
- version='3'
- consensus='true'
- xml:lang='en'>
+   category='std'
+   docName='draft-haynes-nfsv4-mojette-encoding-VERSIONVAR'
+   ipr='trust200902'
+   obsoletes=''
+   scripts='Common,Latin'
+   sortRefs='true'
+   submissionType='IETF'
+   symRefs='true'
+   tocDepth='3'
+   tocInclude='true'
+   version='3'
+   consensus='true'
+   xml:lang='en'>
 
-<front>
-  <title abbrev='mojette-encoding'>
-    The Mojette Transformation for the Erasure Encoding of Files in NFSv4.2
-  </title>
-  <seriesInfo name='Internet-Draft' value='draft-haynes-nfsv4-mojette-encoding-VERSIONVAR'/>
-  <author fullname='Thomas Haynes' initials='T.' surname='Haynes'>
-    <organization abbrev='Hammerspace'>Hammerspace</organization>
-    <address>
-      <email>loghyr@gmail.com</email>
-    </address>
-  </author>
-  <author fullname='Pierre Evenou' initials='P.' surname='Evenou'>
-    <organization abbrev='Hammerspace'>Hammerspace</organization>
-    <address>
-      <email>pierre.evenou@hammerspace.com</email>
-    </address>
-  </author>
-  <date year='YEARVAR' month='MONTHVAR' day='DAYVAR'/>
-  <area>Transport</area>
-  <workgroup>Network File System Version 4</workgroup>
-  <keyword>NFSv4</keyword>
-  <abstract>
-    <t>
-      Parallel NFS (pNFS) allows a separation between the metadata (onto a
-      metadata server) and data (onto a storage device) for a file. The
-      flex file layout type version 2 further allows for erasure encoding
-      types to provide data integrity. In this document, a new erasure
-      encoding type for the Mojette Transformation is introduced.
-    </t>
-  </abstract>
-
-  <note removeInRFC='true'>
-    <t>
-      Discussion of this draft takes place
-      on the NFSv4 working group mailing list (nfsv4@ietf.org),
-      which is archived at
-      <eref target='https://mailarchive.ietf.org/arch/browse/nfsv4/'/>.
-      Working Group information can be found at
-      <eref target='https://datatracker.ietf.org/wg/nfsv4/about/'/>.
-    </t>
-  </note>
-</front>
-
-<middle>
-
-  <section anchor='sec_intro' numbered='true' removeInRFC='false' toc='default'>
-    <name>Introduction</name>
-    <t>
-      In Parallel NFS (pNFS) (see Section 12 of
-      <xref target='RFC8881' format='default' sectionFormat='of' />), the metadata
-      server returns layout type
-      structures that describe where file data is located.  There are
-      different layout types for different storage systems and methods
-      of arranging data on storage devices.  <xref target='I-D.haynes-nfsv4-erasure-encoding'
-      format='default' sectionFormat='of' /> defined the Flexible
-      File Version 2 Layout Type  used with file-based data servers that are
-      accessed using the NFS protocols: NFSv3 <xref target='RFC1813'
-      format='default' sectionFormat='of' />, NFSv4.0 <xref
-      target='RFC7530' format='default' sectionFormat='of' />, NFSv4.1
-      <xref target='RFC8881' format='default' sectionFormat='of' />, and
-      NFSv4.2 <xref target='RFC7862' format='default' sectionFormat='of' />.
-      This document introduces a new Erasure Encoding Type called Mojette
-      Transformation.
-    </t>
-
-    <t>
-      Using the process detailed in <xref target='RFC8178' format='default'
-      sectionFormat='of'/>, the revisions in this document become an
-      extension of NFSv4.2 <xref target='RFC7862' format='default'
-      sectionFormat='of'/>. They are built on top of the external data
-      representation (XDR) <xref target='RFC4506' format='default'
-      sectionFormat='of'/> generated from <xref target='RFC7863'
-      format='default' sectionFormat='of'/>.
-    </t>
-
-    <section anchor='notations' numbered='true' removeInRFC='false' toc='default'>
-      <name>Notations</name>
-
-      <dl newline='false' spacing='normal'>
-        <dt>x_i:</dt>
-        <dd>
-          The ith value of x.
-        </dd>
-        <dt>sum_{x=0}^{10} f(x_i):</dt>
-        <dd>
-          The sum of the function f applied to the values of x ranging
-          from 0 to 10. I.e, The first '{}' describes the lower range
-          of x and the second '{}' describes the upper range of x.
-        </dd>
-      </dl>
-
-    </section>
-
-    <section numbered='true' removeInRFC='false' toc='default'>
-      <name>Requirements Language</name>
+  <front>
+    <title abbrev='mojette-encoding'>
+      The Mojette Transformation for the Erasure Encoding of Files in NFSv4.2
+    </title>
+    <seriesInfo name='Internet-Draft' value='draft-haynes-nfsv4-mojette-encoding-VERSIONVAR'/>
+    <author fullname='Thomas Haynes' initials='T.' surname='Haynes'>
+      <organization abbrev='Hammerspace'>Hammerspace</organization>
+      <address>
+        <email>loghyr@gmail.com</email>
+      </address>
+    </author>
+    <author fullname='Pierre Evenou' initials='P.' surname='Evenou'>
+      <organization abbrev='Hammerspace'>Hammerspace</organization>
+      <address>
+        <email>pierre.evenou@hammerspace.com</email>
+      </address>
+    </author>
+    <date year='YEARVAR' month='MONTHVAR' day='DAYVAR'/>
+    <area>Transport</area>
+    <workgroup>Network File System Version 4</workgroup>
+    <keyword>NFSv4</keyword>
+    <abstract>
       <t>
-        The key words '<bcp14>MUST</bcp14>', '<bcp14>MUST NOT</bcp14>',
-        '<bcp14>REQUIRED</bcp14>', '<bcp14>SHALL</bcp14>', '<bcp14>SHALL
-        NOT</bcp14>', '<bcp14>SHOULD</bcp14>', '<bcp14>SHOULD NOT</bcp14>',
-        '<bcp14>RECOMMENDED</bcp14>', '<bcp14>NOT RECOMMENDED</bcp14>',
-        '<bcp14>MAY</bcp14>', and '<bcp14>OPTIONAL</bcp14>' in this
-        document are to be interpreted as described in BCP&nbsp;14 <xref
-        target='RFC2119' format='default' sectionFormat='of'/> <xref
-        target='RFC8174' format='default' sectionFormat='of'/> when,
-        and only when, they appear in all capitals, as shown here.
+        Parallel NFS (pNFS) allows a separation between the metadata (onto a
+        metadata server) and data (onto a storage device) for a file. The
+        flex file layout type version 2 further allows for erasure encoding
+        types to provide data integrity. In this document, a new erasure
+        encoding type for the Mojette Transformation is introduced.
       </t>
-    </section>
-  </section>
+    </abstract>
 
-  <section anchor='mojette' numbered='true' removeInRFC='false' toc='default'>
-    <name>Mojette Transform</name>
+    <note removeInRFC='true'>
+      <t>
+        Discussion of this draft takes place
+        on the NFSv4 working group mailing list (nfsv4@ietf.org),
+        which is archived at
+        <eref target='https://mailarchive.ietf.org/arch/browse/nfsv4/'/>.
+        Working Group information can be found at
+        <eref target='https://datatracker.ietf.org/wg/nfsv4/about/'/>.
+      </t>
+    </note>
+  </front>
 
-    <section anchor='moj_intro' numbered='true' removeInRFC='false' toc='default'>
+  <middle>
+
+    <section anchor='sec_intro' numbered='true' removeInRFC='false' toc='default'>
       <name>Introduction</name>
-
       <t>
-        The Mojette Transform is an erasure coding technique that provides
-        fault tolerance for data storage systems by enabling the recovery
-        of lost data blocks. This section describes the integration of
-        the systematic Mojette Transform into the NFS protocol, focusing
-        on encoding and decoding file system blocks, typically sized at
-        4KB or 8KB.
+        In Parallel NFS (pNFS) (see Section 12 of
+        <xref target='RFC8881' format='default' sectionFormat='of' />), the metadata
+        server returns layout type
+        structures that describe where file data is located.  There are
+        different layout types for different storage systems and methods
+        of arranging data on storage devices.  <xref target='I-D.haynes-nfsv4-erasure-encoding'
+        format='default' sectionFormat='of' /> defined the Flexible
+        File Version 2 Layout Type  used with file-based data servers that are
+        accessed using the NFS protocols: NFSv3 <xref target='RFC1813'
+        format='default' sectionFormat='of' />, NFSv4.0 <xref
+        target='RFC7530' format='default' sectionFormat='of' />, NFSv4.1
+        <xref target='RFC8881' format='default' sectionFormat='of' />, and
+        NFSv4.2 <xref target='RFC7862' format='default' sectionFormat='of' />.
+        This document introduces a new Erasure Encoding Type called Mojette
+        Transformation.
       </t>
 
-      <section anchor='moj_encode' numbered='true' removeInRFC='false' toc='default'>
-        <name>Encoding</name>
+      <t>
+        Using the process detailed in <xref target='RFC8178' format='default'
+        sectionFormat='of'/>, the revisions in this document become an
+        extension of NFSv4.2 <xref target='RFC7862' format='default'
+        sectionFormat='of'/>. They are built on top of the external data
+        representation (XDR) <xref target='RFC4506' format='default'
+        sectionFormat='of'/> generated from <xref target='RFC7863'
+        format='default' sectionFormat='of'/>.
+      </t>
 
-        <t>
-          The Mojette Transform involves the following steps to encode a data block:
-        </t>
+      <section anchor='notations' numbered='true' removeInRFC='false' toc='default'>
+        <name>Notations</name>
 
         <dl newline='false' spacing='normal'>
-          <dt>Initialization:</dt>
+          <dt>x_i:</dt>
           <dd>
-            Each data block is treated as a 2D grid of data elements
-            (pixels). Typically, a block is structured as a matrix of
-            size PxQ, where P and Q are the dimensions of
-            the grid.
+            The ith value of x.
           </dd>
-
-          <dt>Projections Calculation:</dt>
+          <dt>sum_{x=0}^{10} f(x_i):</dt>
           <dd>
-            Projections are computed along specific directions defined by
-            pairs of coprime integers (p_i, q_i). Each projection sums
-            the values of the data elements (pixels) along a line defined
-            by these directions. The size of a projection is given as in
-            <xref target='size_of_projection' />.  For a given projection
-            direction (p_i, q_i), the projection values are calculated
-            as in <xref target='projection' />, where Delta is 1 if the
-            argument is zero and 0 otherwise.
+            The sum of the function f applied to the values of x ranging
+            from 0 to 10. I.e, The first '{}' describes the lower range
+            of x and the second '{}' describes the upper range of x.
           </dd>
-
         </dl>
 
-        <figure anchor='size_of_projection'>
-          <artwork>
-Size of projection = (P - 1) x |q_i| + (Q - 1) * |p_i| + 1
-          </artwork>
-        </figure>
+      </section>
 
-        <figure anchor='projection'>
-          <artwork>
+      <section numbered='true' removeInRFC='false' toc='default'>
+        <name>Requirements Language</name>
+        <t>
+          The key words '<bcp14>MUST</bcp14>', '<bcp14>MUST NOT</bcp14>',
+          '<bcp14>REQUIRED</bcp14>', '<bcp14>SHALL</bcp14>', '<bcp14>SHALL
+          NOT</bcp14>', '<bcp14>SHOULD</bcp14>', '<bcp14>SHOULD NOT</bcp14>',
+          '<bcp14>RECOMMENDED</bcp14>', '<bcp14>NOT RECOMMENDED</bcp14>',
+          '<bcp14>MAY</bcp14>', and '<bcp14>OPTIONAL</bcp14>' in this
+          document are to be interpreted as described in BCP&nbsp;14 <xref
+          target='RFC2119' format='default' sectionFormat='of'/> <xref
+          target='RFC8174' format='default' sectionFormat='of'/> when,
+          and only when, they appear in all capitals, as shown here.
+        </t>
+      </section>
+    </section>
+
+    <section anchor='mojette' numbered='true' removeInRFC='false' toc='default'>
+      <name>Mojette Transform</name>
+
+      <section anchor='moj_intro' numbered='true' removeInRFC='false' toc='default'>
+        <name>Introduction</name>
+
+        <t>
+          The Mojette Transform is an erasure coding technique that provides
+          fault tolerance for data storage systems by enabling the recovery
+          of lost data blocks. This section describes the integration of
+          the systematic Mojette Transform into the NFS protocol, focusing
+          on encoding and decoding file system blocks, typically sized at
+          4KB or 8KB.
+        </t>
+
+        <section anchor='moj_encode' numbered='true' removeInRFC='false' toc='default'>
+          <name>Encoding</name>
+
+          <t>
+            The Mojette Transform involves the following steps to encode a data block:
+          </t>
+
+          <dl newline='false' spacing='normal'>
+            <dt>Initialization:</dt>
+            <dd>
+              Each data block is treated as a 2D grid of data elements
+              (pixels). Typically, a block is structured as a matrix of
+              size PxQ, where P and Q are the dimensions of
+              the grid.
+            </dd>
+
+            <dt>Projections Calculation:</dt>
+            <dd>
+              Projections are computed along specific directions defined by
+              pairs of coprime integers (p_i, q_i). Each projection sums
+              the values of the data elements (pixels) along a line defined
+              by these directions. The size of a projection is given as in
+              <xref target='size_of_projection' />.  For a given projection
+              direction (p_i, q_i), the projection values are calculated
+              as in <xref target='projection' />, where Delta is 1 if the
+              argument is zero and 0 otherwise.
+            </dd>
+
+          </dl>
+
+          <figure anchor='size_of_projection'>
+            <artwork>
+Size of projection = (P - 1) x |q_i| + (Q - 1) * |p_i| + 1
+            </artwork>
+          </figure>
+
+          <figure anchor='projection'>
+            <artwork>
 Projection(b, p_i, q_i) =
     sum_{k=0}^{Q-1} sum_{l=0}^{P-1}
             Data(k, l) x Delta(b - l x p_i + k x q_i)
-          </artwork>
+            </artwork>
+          </figure>
+        </section>
+
+        <section anchor='moj_decode' numbered='true' removeInRFC='false' toc='default'>
+          <name>Decoding</name>
+          <t>
+            Decoding the Mojette Transform is the inverse of encoding,
+            involving the reconstruction of data from projection data to
+            fill an empty grid. This involves solving a system of linear
+            equations defined by the projection differences and the
+            projection directions (p_i, q_i). The algorithm iterates
+            to refine the values of the missing data elements until the
+            original data block is reconstructed.
+          </t>
+
+          <t>
+            Data reconstruction is possible if Katz's criterion holds,
+            which was extended to any convex shape. The Katz's criterion
+            specifies that reconstruction is valid if for a given set
+            of n projections along n directions (p_i, q_i) either
+            sum_{i=0}^{n} q_i &ge; Q or sum_{i=0}^{n} p_i &ge; P.
+          </t>
+
+          <t>
+            Adjusting the number of lines Q and the projections set
+            allows setting a desired fault-tolerance threshold.
+          </t>
+
+          <t>
+            For example a 64x4 grid can be decoded by the projection
+            set {(0, 1), (1, 1), (2, 1), (3, 1)} as sum_{i=1}^{4} q_i = 4.
+          </t>
+        </section>
+
+        <section anchor='moj_impls' numbered='true' removeInRFC='false' toc='default'>
+          <name>Systematic and Non Systematic Implementations</name>
+          <t>
+            A systematic code is an error-correcting code where the input data is
+            embedded directly in the encoded output. In contrast, a non-systematic
+            code produces an output that does not contain the original input
+            symbols. The Mojette Transform can be implemented in both ways, allowing
+            it to adapt to various use cases.
+          </t>
+        </section>
+
+        <section anchor='moj_dbr' numbered='true' removeInRFC='false' toc='default'>
+          <name>Data Block Representation</name>
+          <t>
+            In the context of NFS, a data block corresponds to a file system
+            block, which is a contiguous segment of data, typically 4KB
+            or 8KB in size. The Mojette Transform encodes these blocks to
+            ensure data integrity and availability in distributed storage
+            environments.
+          </t>
+        </section>
+      </section>
+
+      <section  anchor='moj_non_sys' numbered='true' removeInRFC='false' toc='default'>
+        <name>Non-Systematic Mojette Transform</name>
+        <section  anchor='moj_non_sys_encode' numbered='true' removeInRFC='false' toc='default'>
+          <name>Block Encoding</name>
+          <t>
+            In the non-systematic version of the Mojette Transform,
+            the original data block is not directly included in the
+            encoded output. Instead, the entire encoded output consists
+            of projections computed from the original data. The number
+            of computed projections n is larger than the number of
+            projections m required to rebuild the initial data.
+          </t>
+        </section>
+
+        <section  anchor='moj_non_sys_decode' numbered='true' removeInRFC='false' toc='default'>
+          <name>Block Decoding</name>
+          <t>
+            To decode a file system block that has undergone the
+            non-systematic Mojette Transform, the following steps are
+            followed:
+          </t>
+
+          <dl newline='false' spacing='normal'>
+            <dt>Identify Available Projections:</dt>
+            <dd>
+              Determine which projections are available. A least m
+              projections (what ever they are) out of n must be available.
+            </dd>
+
+            <dt>Recompute Data Block:</dt>
+            <dd>
+               Apply the inverse Mojette Transform to rebuild the original Data.
+            </dd>
+          </dl>
+        </section>
+
+        <section  anchor='moj_non_sys_exam' numbered='true' removeInRFC='false' toc='default'>
+          <name>Example</name>
+
+          <t>
+            Assume a file system block of 4KB is divided into a 128x4
+            matrix of 128-bit elements. Using the non-systematic Mojette
+            Transform, we compute projections along selected directions,
+            such as (-2,1), (-1, -1), (0,1), (1,1), (2,1) and
+            (3,1). The original data is not stored directly; instead,
+            the projections are stored.
+          </t>
+
+          <t>
+            If a data loss occurs, for instance, if two projections
+            are lost, the missing elements can be recovered by using the
+            remaining projections and solving the inverse problem. Any set
+            of 4 projections among the 6 generated can rebuild exactly the
+            original data block
+          </t>
+        </section>
+      </section>
+
+      <section  anchor='moj_sys' numbered='true' removeInRFC='false' toc='default'>
+        <name>Systematic Mojette Transform</name>
+        <section  anchor='moj_sys_encod' numbered='true' removeInRFC='false' toc='default'>
+          <name>Block Encoding</name>
+          <t>
+            In the systematic version, the original data block (file system
+            block) is part of the encoded output. Additional projections
+            are calculated to provide redundancy. If k is the number of
+            original data blocks and n is the total number of encoded
+            blocks (including projections), the systematic code will have
+            the first k blocks as the original data and the remaining n -
+            k blocks as projections.
+          </t>
+        </section>
+
+        <section  anchor='moj_sys_decod' numbered='true' removeInRFC='false' toc='default'>
+          <name>Block Decoding</name>
+          <t>
+            To decode a file system block that has undergone the Systematic
+            Mojette Transform, the following steps are followed:
+          </t>
+
+          <dl newline='false' spacing='normal'>
+            <dt>Identify Missing Data:</dt>
+            <dd>
+              Determine which data lines are missing in the block. Let e
+              be the number of missing lines.
+            </dd>
+            <dt>Recompute Projections:</dt>
+            <dd>
+              Compute the projections of the available (partial) data
+              blocks. Calculate the differences between the projections
+              of the full data and the partial data.
+            </dd>
+            <dt>Combine Existing Data and Recomputed projection:</dt>
+            <dd>
+              Recreate the full block of data by combining the existing
+              data with the reconstructed data according to their positions
+              in the block.
+            </dd>
+          </dl>
+        </section>
+
+        <section  anchor='moj_sys_exam' numbered='true' removeInRFC='false' toc='default'>
+          <name>Example</name>
+          <t>
+            Assume a file system block of 4KB is divided into a $64\times4$
+            matrix of 128-bit elements. Using the systematic Mojette
+            Transform, we first compute projections along selected
+            directions, such as (0,1), and (1,1). The original 4 blocks
+            of 64 128-bit elements remains part of the encoded data, and
+            the 2 additional projections are stored for redundancy. If
+            a data loss occurs, the missing elements can be recovered by
+            using the projections and solving the inverse problem.
+          </t>
+        </section>
+      </section>
+
+      <section  anchor='moj_conc' numbered='true' removeInRFC='false' toc='default'>
+        <name>Conclusion</name>
+        <t>
+          The Mojette Transform provides two implementations for an
+          efficient and effective way to enhance data reliability by
+          encoding file system blocks with additional projections. These
+          methods ensure that data can be reconstructed even in the presence
+          of failures, thereby enhancing the fault tolerance of the file
+          system.
+        </t>
+
+        <t>
+          In summary, the Mojette Transform offers robust solutions for data
+          reliability in file systems, balancing redundancy, efficiency,
+          and performance to ensure data integrity and quick recovery
+          from failures.
+        </t>
+
+        <section  anchor='moj_conc_non_sys' numbered='true' removeInRFC='false' toc='default'>
+          <name>Benefits of Non-Systematic Mojette Transform:</name>
+          <dl newline='false' spacing='normal'>
+            <dt>Fast Failure Detection:</dt>
+            <dd>
+              <t>
+                By storing only encoded data and having the ability to
+                rebuild the original block from any sufficient subset of
+                projections, the non-systematic encoding implementation
+                offers great flexibility and allows fast failure detection
+                and recovery.
+              </t>
+            </dd>
+
+            <dt>Constant Performance:</dt>
+            <dd>
+              <t>
+                The non-systematic decoding algorithm is the most
+                performant of all implementations. Although decoding
+                always occurs, the overhead is low, and unlike systematic
+                encoding, performance remains constant regardless of
+                the number of failures.
+              </t>
+            </dd>
+          </dl>
+        </section>
+
+        <section  anchor='moj_conc_sys' numbered='true' removeInRFC='false' toc='default'>
+          <name>Benefits of Systematic Mojette Transform:</name>
+          <dl newline='false' spacing='normal'>
+            <dt>Redundancy Reduction:</dt>
+            <dd>
+              <t>
+                Systematic Mojette coding reduces redundancy by
+                integrating the original data blocks into the encoded
+                data, unlike non-systematic codes that generate entirely
+                new data from the original.
+              </t>
+            </dd>
+
+            <dt>Efficiency:</dt>
+            <dd>
+              <t>
+                Fewer projections need to be calculated and stored,
+                reducing both computational and storage overhead.
+              </t>
+            </dd>
+
+            <dt>Performance:</dt>
+            <dd>
+              <t>
+                Decoding is faster and simpler, especially when some
+                original data blocks are available, enabling quicker data
+                access. However, performance is slightly degraded in the
+                case of failures and depends on the number of failures.
+              </t>
+            </dd>
+          </dl>
+        </section>
+      </section>
+    </section>
+
+    <section anchor="extension" numbered="true" removeInRFC="false" toc="default">
+      <name>Extension of Flexible File Layout Type Version 2 Encoding Type</name>
+
+      <section anchor='ffv2_encoding_type4' numbered='true' removeInRFC='false' toc='default'>
+        <name>ffv2_encoding_type4</name>
+
+        <figure anchor='code_ffv2_encoding_type4'>
+          <sourcecode type='xdr'>
+/// enum ffv2_encoding_type4 {
+///     FFV2_ENCODING_MIRRORED               = 0x1;
+///     FFV2_ENCODING_MOJETTE_SYSTEMATIC     = 0x2;
+///     FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC = 0x3;
+/// };
+          </sourcecode>
         </figure>
-      </section>
-
-      <section anchor='moj_decode' numbered='true' removeInRFC='false' toc='default'>
-        <name>Decoding</name>
-        <t>
-          Decoding the Mojette Transform is the inverse of encoding,
-          involving the reconstruction of data from projection data to
-          fill an empty grid. This involves solving a system of linear
-          equations defined by the projection differences and the
-          projection directions (p_i, q_i). The algorithm iterates
-          to refine the values of the missing data elements until the
-          original data block is reconstructed.
-        </t>
 
         <t>
-          Data reconstruction is possible if Katz's criterion holds,
-          which was extended to any convex shape. The Katz's criterion
-          specifies that reconstruction is valid if for a given set
-          of n projections along n directions (p_i, q_i) either
-          sum_{i=0}^{n} q_i &ge; Q or sum_{i=0}^{n} p_i &ge; P.
-        </t>
-
-        <t>
-          Adjusting the number of lines Q and the projections set
-          allows setting a desired fault-tolerance threshold.
-        </t>
-
-        <t>
-          For example a 64x4 grid can be decoded by the projection
-          set {(0, 1), (1, 1), (2, 1), (3, 1)} as sum_{i=1}^{4} q_i = 4.
+          ffv2_encoding_type4 is extended in <xref target='code_ffv2_encoding_type4' />
+          to introduce two different erasure encoding types: FFV2_ENCODING_MOJETTE_SYSTEMATIC
+          and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC. They are intoduced at this
+          level instead of at the ffv2_encoding_type_data4 (see <xref target='code_ffv2_encoding_type_data4' />)
+          in order for the client to negotiate the support of one over the other
+          with the NFS4ERR_ERASURE_ENCODING_NOT_SUPPORTED error (see Section ZZZ
+          of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>).
         </t>
       </section>
 
-      <section anchor='moj_impls' numbered='true' removeInRFC='false' toc='default'>
-        <name>Systematic and Non Systematic Implementations</name>
-        <t>
-          A systematic code is an error-correcting code where the input data is
-          embedded directly in the encoded output. In contrast, a non-systematic
-          code produces an output that does not contain the original input
-          symbols. The Mojette Transform can be implemented in both ways, allowing
-          it to adapt to various use cases.
-        </t>
-      </section>
-
-      <section anchor='moj_dbr' numbered='true' removeInRFC='false' toc='default'>
-        <name>Data Block Representation</name>
-        <t>
-          In the context of NFS, a data block corresponds to a file system
-          block, which is a contiguous segment of data, typically 4KB
-          or 8KB in size. The Mojette Transform encodes these blocks to
-          ensure data integrity and availability in distributed storage
-          environments.
-        </t>
-      </section>
-    </section>
-
-    <section  anchor='moj_non_sys' numbered='true' removeInRFC='false' toc='default'>
-      <name>Non-Systematic Mojette Transform</name>
-      <section  anchor='moj_non_sys_encode' numbered='true' removeInRFC='false' toc='default'>
-        <name>Block Encoding</name>
-        <t>
-          In the non-systematic version of the Mojette Transform,
-          the original data block is not directly included in the
-          encoded output. Instead, the entire encoded output consists
-          of projections computed from the original data. The number
-          of computed projections n is larger than the number of
-          projections m required to rebuild the initial data.
-        </t>
-      </section>
-
-      <section  anchor='moj_non_sys_decode' numbered='true' removeInRFC='false' toc='default'>
-        <name>Block Decoding</name>
-        <t>
-          To decode a file system block that has undergone the
-          non-systematic Mojette Transform, the following steps are
-          followed:
-        </t>
-
-        <dl newline='false' spacing='normal'>
-          <dt>Identify Available Projections:</dt>
-          <dd>
-            Determine which projections are available. A least m
-            projections (what ever they are) out of n must be available.
-          </dd>
-
-          <dt>Recompute Data Block:</dt>
-          <dd>
-             Apply the inverse Mojette Transform to rebuild the original Data.
-          </dd>
-        </dl>
-      </section>
-
-      <section  anchor='moj_non_sys_exam' numbered='true' removeInRFC='false' toc='default'>
-        <name>Example</name>
-
-        <t>
-          Assume a file system block of 4KB is divided into a 128x4
-          matrix of 128-bit elements. Using the non-systematic Mojette
-          Transform, we compute projections along selected directions,
-          such as (-2,1), (-1, -1), (0,1), (1,1), (2,1) and
-          (3,1). The original data is not stored directly; instead,
-          the projections are stored.
-        </t>
-
-        <t>
-          If a data loss occurs, for instance, if two projections
-          are lost, the missing elements can be recovered by using the
-          remaining projections and solving the inverse problem. Any set
-          of 4 projections among the 6 generated can rebuild exactly the
-          original data block
-        </t>
-      </section>
-    </section>
-
-    <section  anchor='moj_sys' numbered='true' removeInRFC='false' toc='default'>
-      <name>Systematic Mojette Transform</name>
-      <section  anchor='moj_sys_encod' numbered='true' removeInRFC='false' toc='default'>
-        <name>Block Encoding</name>
-        <t>
-          In the systematic version, the original data block (file system
-          block) is part of the encoded output. Additional projections
-          are calculated to provide redundancy. If k is the number of
-          original data blocks and n is the total number of encoded
-          blocks (including projections), the systematic code will have
-          the first k blocks as the original data and the remaining n -
-          k blocks as projections.
-        </t>
-      </section>
-
-      <section  anchor='moj_sys_decod' numbered='true' removeInRFC='false' toc='default'>
-        <name>Block Decoding</name>
-        <t>
-          To decode a file system block that has undergone the Systematic
-          Mojette Transform, the following steps are followed:
-        </t>
-
-        <dl newline='false' spacing='normal'>
-          <dt>Identify Missing Data:</dt>
-          <dd>
-            Determine which data lines are missing in the block. Let e
-            be the number of missing lines.
-          </dd>
-          <dt>Recompute Projections:</dt>
-          <dd>
-            Compute the projections of the available (partial) data
-            blocks. Calculate the differences between the projections
-            of the full data and the partial data.
-          </dd>
-          <dt>Combine Existing Data and Recomputed projection:</dt>
-          <dd>
-            Recreate the full block of data by combining the existing
-            data with the reconstructed data according to their positions
-            in the block.
-          </dd>
-        </dl>
-      </section>
-
-      <section  anchor='moj_sys_exam' numbered='true' removeInRFC='false' toc='default'>
-        <name>Example</name>
-        <t>
-          Assume a file system block of 4KB is divided into a $64\times4$
-          matrix of 128-bit elements. Using the systematic Mojette
-          Transform, we first compute projections along selected
-          directions, such as (0,1), and (1,1). The original 4 blocks
-          of 64 128-bit elements remains part of the encoded data, and
-          the 2 additional projections are stored for redundancy. If
-          a data loss occurs, the missing elements can be recovered by
-          using the projections and solving the inverse problem.
-        </t>
-      </section>
-    </section>
-
-    <section  anchor='moj_conc' numbered='true' removeInRFC='false' toc='default'>
-      <name>Conclusion</name>
-      <t>
-        The Mojette Transform provides two implementations for an
-        efficient and effective way to enhance data reliability by
-        encoding file system blocks with additional projections. These
-        methods ensure that data can be reconstructed even in the presence
-        of failures, thereby enhancing the fault tolerance of the file
-        system.
-      </t>
-
-      <t>
-        In summary, the Mojette Transform offers robust solutions for data
-        reliability in file systems, balancing redundancy, efficiency,
-        and performance to ensure data integrity and quick recovery
-        from failures.
-      </t>
-
-      <section  anchor='moj_conc_non_sys' numbered='true' removeInRFC='false' toc='default'>
-        <name>Benefits of Non-Systematic Mojette Transform:</name>
-        <dl newline='false' spacing='normal'>
-          <dt>Fast Failure Detection:</dt>
-          <dd>
-            <t>
-              By storing only encoded data and having the ability to
-              rebuild the original block from any sufficient subset of
-              projections, the non-systematic encoding implementation
-              offers great flexibility and allows fast failure detection
-              and recovery.
-            </t>
-          </dd>
-
-          <dt>Constant Performance:</dt>
-          <dd>
-            <t>
-              The non-systematic decoding algorithm is the most
-              performant of all implementations. Although decoding
-              always occurs, the overhead is low, and unlike systematic
-              encoding, performance remains constant regardless of
-              the number of failures.
-            </t>
-          </dd>
-        </dl>
-      </section>
-
-      <section  anchor='moj_conc_sys' numbered='true' removeInRFC='false' toc='default'>
-        <name>Benefits of Systematic Mojette Transform:</name>
-        <dl newline='false' spacing='normal'>
-          <dt>Redundancy Reduction:</dt>
-          <dd>
-            <t>
-              Systematic Mojette coding reduces redundancy by
-              integrating the original data blocks into the encoded
-              data, unlike non-systematic codes that generate entirely
-              new data from the original.
-            </t>
-          </dd>
-
-          <dt>Efficiency:</dt>
-          <dd>
-            <t>
-              Fewer projections need to be calculated and stored,
-              reducing both computational and storage overhead.
-            </t>
-          </dd>
-
-          <dt>Performance:</dt>
-          <dd>
-            <t>
-              Decoding is faster and simpler, especially when some
-              original data blocks are available, enabling quicker data
-              access. However, performance is slightly degraded in the
-              case of failures and depends on the number of failures.
-            </t>
-          </dd>
-        </dl>
-      </section>
-    </section>
-  </section>
-
-  <section anchor="extension" numbered="true" removeInRFC="false" toc="default">
-    <name>Extension of Flexible File Layout Type Version 2 Encoding Type</name>
-
-    <section anchor='ffv2_encoding_type4' numbered='true' removeInRFC='false' toc='default'>
-      <name>ffv2_encoding_type4</name>
-
-      <figure anchor='code_ffv2_encoding_type4'>
-        <sourcecode type='xdr'>
-   /// enum ffv2_encoding_type4 {
-   ///     FFV2_ENCODING_MIRRORED               = 0x1;
-   ///     FFV2_ENCODING_MOJETTE_SYSTEMATIC     = 0x2;
-   ///     FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC = 0x3;
-   /// };
-        </sourcecode>
-      </figure>
-
-      <t>
-        ffv2_encoding_type4 is extended in <xref target='code_ffv2_encoding_type4' />
-        to introduce two different erasure encoding types: FFV2_ENCODING_MOJETTE_SYSTEMATIC
-        and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC. They are intoduced at this
-        level instead of at the ffv2_encoding_type_data4 (see <xref target='code_ffv2_encoding_type_data4' />)
-        in order for the client to negotiate the support of one over the other
-        with the NFS4ERR_ERASURE_ENCODING_NOT_SUPPORTED error (see Section ZZZ
-        of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>).
-      </t>
-    </section>
-
-    <section anchor='ffv2_mojette_faulty_devices4' numbered='true' removeInRFC='false' toc='default'>
-      <name>ffv2_mojette_faulty_devices4</name>
-      <figure anchor='code_ffv2_mojette_faulty_devices4'>
-        <sourcecode type='xdr'>
+      <section anchor='ffv2_mojette_faulty_devices4' numbered='true' removeInRFC='false' toc='default'>
+        <name>ffv2_mojette_faulty_devices4</name>
+        <figure anchor='code_ffv2_mojette_faulty_devices4'>
+          <sourcecode type='xdr'>
 /// enum ffv2_mojette_faulty_devices4 {
 ///         FFV2_MOJETTE_FAULTY_DEVICES_2_1       = 0x1;
 ///         FFV2_MOJETTE_FAULTY_DEVICES_4_1       = 0x2;
@@ -476,27 +476,27 @@ Projection(b, p_i, q_i) =
 ///         FFV2_MOJETTE_FAULTY_DEVICES_8_3       = 0x6;
 ///         FFV2_MOJETTE_FAULTY_DEVICES_8_4       = 0x7;
 /// };
-        </sourcecode>
-      </figure>
+          </sourcecode>
+        </figure>
 
-      <t>
-        The ffv2_mojette_faulty_devices4 (see <xref target='code_ffv2_mojette_faulty_devices4' />)
-        can be used in both the layout_hint (see both Section 5.12.4 of <xref target='RFC8881' format='default' sectionFormat='of' />
-        and Section XXX of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>) and
-        the ffl_encoding_type_data (see Section YYY of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>)
-        to convey the distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
-        blocks (see Section XXX of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>)
-        in the layouts for the Flexible File Version 2 Layout Type. The name of
-        each of the enum targets ends with 'X_Y', which states that there is a need
-        for X+Y files to compose the projection. X is the number of FFV2_DS_FLAGS_ACTIVE
-        blocks and Y is the number of FFV2_DS_FLAGS_SPARE blocks.
-      </t>
-    </section>
+        <t>
+          The ffv2_mojette_faulty_devices4 (see <xref target='code_ffv2_mojette_faulty_devices4' />)
+          can be used in both the layout_hint (see both Section 5.12.4 of <xref target='RFC8881' format='default' sectionFormat='of' />
+          and Section XXX of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>) and
+          the ffl_encoding_type_data (see Section YYY of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>)
+          to convey the distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
+          blocks (see Section XXX of <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>)
+          in the layouts for the Flexible File Version 2 Layout Type. The name of
+          each of the enum targets ends with 'X_Y', which states that there is a need
+          for X+Y files to compose the projection. X is the number of FFV2_DS_FLAGS_ACTIVE
+          blocks and Y is the number of FFV2_DS_FLAGS_SPARE blocks.
+        </t>
+      </section>
 
-    <section anchor='ffv2_encoding_type_data4' numbered='true' removeInRFC='false' toc='default'>
-      <name>ffv2_encoding_type_data4</name>
-      <figure anchor='code_ffv2_encoding_type_data4'>
-        <sourcecode type='xdr'>
+      <section anchor='ffv2_encoding_type_data4' numbered='true' removeInRFC='false' toc='default'>
+        <name>ffv2_encoding_type_data4</name>
+        <figure anchor='code_ffv2_encoding_type_data4'>
+          <sourcecode type='xdr'>
 /// union ffv2_encoding_type_data4
 ///          switch (ffv2_encoding_type4 fetd_type) {
 ///     case FFV2_ENCODING_MIRRORED:
@@ -506,210 +506,210 @@ Projection(b, p_i, q_i) =
 ///         ffv2_mojette_faulty_devices4
 ///                       fetd_mojette_potection_configuration;
 /// };
-        </sourcecode>
-      </figure>
+          </sourcecode>
+        </figure>
 
-      <t>
-        This addition of FFV2_ENCODING_MOJETTE_SYSTEMATIC and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC
-        to the ffv2_encoding_type_data4 (see
-        <xref target='code_ffv2_encoding_type_data4' />) allows for the metadata server
-        to inform the client as to the
-        expected distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
-        blocks inside the ffm_data_servers arm for the Mojette erasure
-        encoding types.
-      </t>
+        <t>
+          This addition of FFV2_ENCODING_MOJETTE_SYSTEMATIC and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC
+          to the ffv2_encoding_type_data4 (see
+          <xref target='code_ffv2_encoding_type_data4' />) allows for the metadata server
+          to inform the client as to the
+          expected distribution of FFV2_DS_FLAGS_ACTIVE and FFV2_DS_FLAGS_SPARE projection
+          blocks inside the ffm_data_servers arm for the Mojette erasure
+          encoding types.
+        </t>
+      </section>
     </section>
-  </section>
 
-  <section anchor='examples' numbered='true' removeInRFC='false' toc='default'>
-    <name>Examples Tying It All Together</name>
+    <section anchor='examples' numbered='true' removeInRFC='false' toc='default'>
+      <name>Examples Tying It All Together</name>
 
-    <section anchor='Block_Sizes' numbered='true' removeInRFC='false' toc='default'>
-    <name>Block_Sizes</name>
-      <t>
-        Consider a FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC encoding type which
-        needs
-        6 active blocks and 2 spare blocks in the payload (Not a valid 
-        ffv2_mojette_faulty_devices4, but needed to show varied block sizes). As can be seen
-        in <xref target='example_block_sizes'/> , 4kB data blocks need blocks
-        about 1kB in size. But not all blocks are the same size.
-      </t>
+      <section anchor='Block_Sizes' numbered='true' removeInRFC='false' toc='default'>
+      <name>Block_Sizes</name>
+        <t>
+          Consider a FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC encoding type which
+          needs
+          6 active blocks and 2 spare blocks in the payload (Not a valid 
+          ffv2_mojette_faulty_devices4, but needed to show varied block sizes). As can be seen
+          in <xref target='example_block_sizes'/> , 4kB data blocks need blocks
+          about 1kB in size. But not all blocks are the same size.
+        </t>
 
-    <table anchor='example_block_sizes'>
-      <name>Example sizes of a Mojette Projection</name>
-      <thead>
-        <tr>
-          <th>Projection ID</th><th>0</th> <th>1</th> <th>2</th> <th>3</th> <th>4</th> <th>5</th> <th>6</th> <th>7</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>p value</td><td>-3</td> <td>-2</td> <td>-1</td> <td>0</td> <td>1</td> <td>2</td> <td>0</td> <td>0</td>
-        </tr>
-        <tr>
-          <td>q value</td><td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>0</td> <td>0</td>
-        </tr>
-        <tr>
-          <td>size (bytes)</td><td>1048</td> <td>1080</td> <td>1080</td> <td>1048</td> <td>1064</td> <td>1048</td> <td>0</td> <td>0</td>
-        </tr>
-      </tbody>
-    </table>
+      <table anchor='example_block_sizes'>
+        <name>Example sizes of a Mojette Projection</name>
+        <thead>
+          <tr>
+            <th>Projection ID</th><th>0</th> <th>1</th> <th>2</th> <th>3</th> <th>4</th> <th>5</th> <th>6</th> <th>7</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>p value</td><td>-3</td> <td>-2</td> <td>-1</td> <td>0</td> <td>1</td> <td>2</td> <td>0</td> <td>0</td>
+          </tr>
+          <tr>
+            <td>q value</td><td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>1</td> <td>0</td> <td>0</td>
+          </tr>
+          <tr>
+            <td>size (bytes)</td><td>1048</td> <td>1080</td> <td>1080</td> <td>1048</td> <td>1064</td> <td>1048</td> <td>0</td> <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+      </section>
     </section>
-  </section>
 
-  <section anchor='xdr_desc' numbered='true' removeInRFC='false' toc='default'>
-    <name>Extraction of XDR</name>
-    <t>
-      This document contains the external data representation (XDR)
-      <xref target='RFC4506' format='default' sectionFormat='of'/> description of the uncacheable
-      attribute.
-      The XDR description is embedded in this
-      document in a way that makes it simple for the reader to extract
-      into a ready-to-compile form.  The reader can feed this document
-      into the following shell script to produce the machine readable
-      XDR description of the new flags:
-    </t>
-    <sourcecode name='' type='' markers='true'><![CDATA[
+    <section anchor='xdr_desc' numbered='true' removeInRFC='false' toc='default'>
+      <name>Extraction of XDR</name>
+      <t>
+        This document contains the external data representation (XDR)
+        <xref target='RFC4506' format='default' sectionFormat='of'/> description of the uncacheable
+        attribute.
+        The XDR description is embedded in this
+        document in a way that makes it simple for the reader to extract
+        into a ready-to-compile form.  The reader can feed this document
+        into the following shell script to produce the machine readable
+        XDR description of the new flags:
+      </t>
+      <sourcecode name='' type='' markers='true'><![CDATA[
 #!/bin/sh
 grep '^ *///' $* | sed 's?^ */// ??' | sed 's?^ *///$??'
-    ]]>
-    </sourcecode>
-    <t>
-      That is, if the above script is stored in a file called 'extract.sh', and
-      this document is in a file called 'spec.txt', then the reader can do:
-    </t>
-    <sourcecode name='' type='' markers='true'><![CDATA[
+      ]]>
+      </sourcecode>
+      <t>
+        That is, if the above script is stored in a file called 'extract.sh', and
+        this document is in a file called 'spec.txt', then the reader can do:
+      </t>
+      <sourcecode name='' type='' markers='true'><![CDATA[
 sh extract.sh < spec.txt > mojette_encoding_prot.x
-    ]]>
-    </sourcecode>
-    <t>
-      The effect of the script is to remove leading white space from each
-      line, plus a sentinel sequence of '///'.  XDR descriptions with the
-      sentinel sequence are embedded throughout the document.
-    </t>
-    <t>
-      Note that the XDR code contained in this document depends on types
-      from the NFSv4.2 nfs4_prot.x file (generated from
-      <xref target='RFC7863' format='default' sectionFormat='of'/>),
-      the Flex Files Layout Type flexfiles.x file (generated from
-      <xref target='RFC8435' format='default' sectionFormat='of'/>), and
-      the Flex Files Layout Type version 2 flexfilesv2.x (generated from
-      <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>).
-      This includes both nfs types that end with a 4, such as offset4,
-      length4, etc., as well as more generic types such as uint32_t and
-      uint64_t.
-    </t>
-    <t>
-      While the XDR can be appended to that from
-      <xref target='RFC7863' format='default' sectionFormat='of'/>,
-      the various code snippets belong in their respective areas of
-      that XDR.
-    </t>
-  </section>
+      ]]>
+      </sourcecode>
+      <t>
+        The effect of the script is to remove leading white space from each
+        line, plus a sentinel sequence of '///'.  XDR descriptions with the
+        sentinel sequence are embedded throughout the document.
+      </t>
+      <t>
+        Note that the XDR code contained in this document depends on types
+        from the NFSv4.2 nfs4_prot.x file (generated from
+        <xref target='RFC7863' format='default' sectionFormat='of'/>),
+        the Flex Files Layout Type flexfiles.x file (generated from
+        <xref target='RFC8435' format='default' sectionFormat='of'/>), and
+        the Flex Files Layout Type version 2 flexfilesv2.x (generated from
+        <xref target='I-D.haynes-nfsv4-erasure-encoding' format='default' sectionFormat='of'/>).
+        This includes both nfs types that end with a 4, such as offset4,
+        length4, etc., as well as more generic types such as uint32_t and
+        uint64_t.
+      </t>
+      <t>
+        While the XDR can be appended to that from
+        <xref target='RFC7863' format='default' sectionFormat='of'/>,
+        the various code snippets belong in their respective areas of
+        that XDR.
+      </t>
+    </section>
 
-  <section anchor='sec_security' numbered='true' removeInRFC='false' toc='default'>
-    <name>Security Considerations</name>
-    <t>
-      This document has the same security considerations as both Flex Files
-      Layout Type version 1 (see Section 15 of <xref target='RFC8435'
-      format='default' sectionFormat='of' />) and NFSv4.2 (see Section 17 of <xref
-      target='RFC7862' format='default' sectionFormat='of' />).
-    </t>
-  </section>
+    <section anchor='sec_security' numbered='true' removeInRFC='false' toc='default'>
+      <name>Security Considerations</name>
+      <t>
+        This document has the same security considerations as both Flex Files
+        Layout Type version 1 (see Section 15 of <xref target='RFC8435'
+        format='default' sectionFormat='of' />) and NFSv4.2 (see Section 17 of <xref
+        target='RFC7862' format='default' sectionFormat='of' />).
+      </t>
+    </section>
 
-  <section anchor='sec_iana' numbered='true' removeInRFC='false' toc='default'>
-    <name>IANA Considerations</name>
-    <t>
-      This document introduces changes in the 'Flex Files V2 Erasure Encoding Type Registry'. This
-      document defines both the FFV2_ENCODING_MOJETTE_SYSTEMATIC and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC
-      types for Client-Side Mojette Transformations.
-    </t>
+    <section anchor='sec_iana' numbered='true' removeInRFC='false' toc='default'>
+      <name>IANA Considerations</name>
+      <t>
+        This document introduces changes in the 'Flex Files V2 Erasure Encoding Type Registry'. This
+        document defines both the FFV2_ENCODING_MOJETTE_SYSTEMATIC and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC
+        types for Client-Side Mojette Transformations.
+      </t>
 
-    <table anchor='erasure_encoding'>
-      <name>Flex Files V2 Erasure Encoding Type Assignments</name>
-      <thead>
-        <tr>
-          <th>Erasure Encoding Type Name</th>
-          <th>Value</th>
-          <th>RFC</th>
-          <th>How</th>
-          <th>Minor Versions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>FFV2_ENCODING_MOJETTE_SYSTEMATIC</td> <td>2</td> <td>RFCTBD10</td> <td>L</td> <td>2</td>
-        </tr>
-        <tr>
-          <td>FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC</td> <td>3</td> <td>RFCTBD10</td> <td>L</td> <td>2</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+      <table anchor='erasure_encoding'>
+        <name>Flex Files V2 Erasure Encoding Type Assignments</name>
+        <thead>
+          <tr>
+            <th>Erasure Encoding Type Name</th>
+            <th>Value</th>
+            <th>RFC</th>
+            <th>How</th>
+            <th>Minor Versions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>FFV2_ENCODING_MOJETTE_SYSTEMATIC</td> <td>2</td> <td>RFCTBD10</td> <td>L</td> <td>2</td>
+          </tr>
+          <tr>
+            <td>FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC</td> <td>3</td> <td>RFCTBD10</td> <td>L</td> <td>2</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-</middle>
+  </middle>
 
-<back>
+  <back>
 
-<references>
-  <name>References</name>
+    <references>
+      <name>References</name>
 
-  <references>
-  <name>Normative References</name>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4506.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7530.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7862.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7863.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8178.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8435.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml'/>
-    <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-      href='https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.haynes-nfsv4-erasure-encoding.xml'/>
-  </references>
-  <references>
-  <name>Informative References</name>
-     <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
-       href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1813.xml'/>
-  </references>
-</references>
+      <references>
+      <name>Normative References</name>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4506.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7530.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7862.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7863.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8178.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8435.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml'/>
+        <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+          href='https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.haynes-nfsv4-erasure-encoding.xml'/>
+      </references>
+      <references>
+      <name>Informative References</name>
+         <xi:include xmlns:xi='http://www.w3.org/2001/XInclude'
+           href='https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1813.xml'/>
+      </references>
+    </references>
 
-<section numbered='true' removeInRFC='false' toc='default'>
-  <name>Acknowledgments</name>
-  <t>
-    The following from Hammerspace were instrumental in driving
-    the incorporation of the Mojette Transformation into
-    an encoding type for Flexible Files Version 2 Layout Type: David Flynn, Trond Myklebust, Tom Haynes, Didier Feron,
-    Jean-Pierre Monchanin, Pierre Evenou, and Brian Pawlowski.
-  </t>
-</section>
+    <section numbered='true' removeInRFC='false' toc='default'>
+      <name>Acknowledgments</name>
+      <t>
+        The following from Hammerspace were instrumental in driving
+        the incorporation of the Mojette Transformation into
+        an encoding type for Flexible Files Version 2 Layout Type: David Flynn, Trond Myklebust, Tom Haynes, Didier Feron,
+        Jean-Pierre Monchanin, Pierre Evenou, and Brian Pawlowski.
+      </t>
+    </section>
 
-<section numbered='true' removeInRFC='true' toc='default'>
-  <name>RFC Editor Notes</name>
+    <section numbered='true' removeInRFC='true' toc='default'>
+      <name>RFC Editor Notes</name>
 
-  <t>
-    [RFC Editor: prior to publishing this document as an RFC, please
-    replace all occurrences of RFCTBD10 with RFCxxxx where xxxx is the
-    RFC number of this document]
-  </t>
+      <t>
+        [RFC Editor: prior to publishing this document as an RFC, please
+        replace all occurrences of RFCTBD10 with RFCxxxx where xxxx is the
+        RFC number of this document]
+      </t>
 
-  <t>
-    [RFC Editor: prior to publishing this document as an RFC, please
-    replace all occurrences of I-D.haynes-nfsv4-erasure-encoding with RFCyyyy where yyyy is the
-    RFC number of the document: draft-haynes-nfsv4-erasure-encoding.xml]
-  </t>
-</section>
+      <t>
+        [RFC Editor: prior to publishing this document as an RFC, please
+        replace all occurrences of I-D.haynes-nfsv4-erasure-encoding with RFCyyyy where yyyy is the
+        RFC number of the document: draft-haynes-nfsv4-erasure-encoding.xml]
+      </t>
+    </section>
 
-</back>
+  </back>
 
 </rfc>
