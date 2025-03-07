@@ -173,15 +173,15 @@
 
           <figure anchor='size_of_projection'>
             <artwork>
-Size of projection = (P - 1) x |q_i| + (Q - 1) * |p_i| + 1
+Size of projection = (P - 1) * |q| + (Q - 1) * |p| + 1
             </artwork>
           </figure>
 
           <figure anchor='projection'>
             <artwork>
 Projection(b, p_i, q_i) =
-    sum_{k=0}^{Q-1} sum_{l=0}^{P-1}
-            Data(k, l) x Delta(b - l x p_i + k x q_i)
+  sum_{k=0}^{Q-1} sum_{l=0}^{P-1}
+    Data(k, l) * Delta(b - l * p_i + k * q_i)
             </artwork>
           </figure>
         </section>
