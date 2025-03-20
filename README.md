@@ -1,28 +1,30 @@
-This draft describes an extension to the NFSv42 protocol.
+# The Mojette Transformation for the Erasure Coding of Files in NFSv4.2
 
-In particular, it introduces the Mojette Transformation
-for Files as applied to a pNFS Layout Type.
+This is the working area for the individual Internet-Draft, "The Mojette Transformation for the Erasure Coding of Files in NFSv4.2".
 
-http://www.ietf.org/html.charters/nfsv4-charter.html
-http://www.ietf.org/mail-archive/web/nfsv4/index.html
+* [Editor's Copy](https://ietf-wg-nfsv4.github.io/mojette_encoding/#go.draft-haynes-nfsv4-mojette-encoding.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-haynes-nfsv4-mojette-encoding)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-haynes-nfsv4-mojette-encoding)
+* [Compare Editor's Copy to Individual Draft](https://ietf-wg-nfsv4.github.io/mojette_encoding/#go.draft-haynes-nfsv4-mojette-encoding.diff)
 
-NOTE: The drafts contained here may change after it is
-posted to the IETF site. The ITEF site is always the
-definitive authority on content.
 
-You can easily install xml2rfc to get the tools
-necessary to make the text file version:
+## Contributing
 
-   > pip install xml2rfc
+See the
+[guidelines for contributions](https://github.com/ietf-wg-nfsv4/mojette_encoding/blob/main/CONTRIBUTING.md).
 
-To build:
+Contributions can be made by creating pull requests.
+The GitHub interface supports creating pull requests using the Edit (✏) button.
 
-1. Bump the VERS in Makefile
 
-2. Build
+## Command Line Usage
 
-   > make
+Formatted text and HTML versions of the draft can be built using `make`.
 
-3) To get a text file version:
+```sh
+$ make
+```
 
-   > make text
+Command line usage requires that you have the necessary software installed.  See
+[the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
+
