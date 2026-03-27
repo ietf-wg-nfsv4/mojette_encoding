@@ -94,6 +94,15 @@ data blocks.  This section describes the integration of the systematic
 Mojette Transform into the NFS protocol, focusing on encoding and decoding
 file system blocks, typically sized at 4KB or 8KB.
 
+### Arithmetic
+
+The Mojette Transform operates on unsigned integer elements using
+modular addition.  The element (pixel) size is an implementation
+choice: implementations can use 128-bit elements to leverage SSE
+SIMD instructions, or 64-bit elements for compatibility with NEON
+or AVX2 vector widths.  The transform is correct in any ring; no
+Galois field operations are required.
+
 ### Encoding
 
 The Mojette Transform involves the following steps to encode a data block:
