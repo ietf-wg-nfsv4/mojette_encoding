@@ -302,7 +302,7 @@ of failures.
 
 fv2_encoding_type4 is extended in {{ffv2_encoding_type4}} to introduce two
 different erasure encoding types: FFV2_ENCODING_MOJETTE_SYSTEMATIC
-and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC.  They are intoduced at this
+and FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC.  They are introduced at this
 level instead of at the ffv2_encoding_type_data4
 ({{ffv2_encoding_type_data4}}) in order for the client
 to negotiate the support of one over the other with the
@@ -346,7 +346,7 @@ blocks.
 ///     case FFV2_ENCODING_MOJETTE_SYSTEMATIC:
 ///     case FFV2_ENCODING_MOJETTE_NON_SYSTEMATIC:
 ///         ffv2_mojette_faulty_devices4
-///                       fetd_mojette_potection_configuration;
+///                       fetd_mojette_protection_configuration;
 /// };
 ~~~
 {: #ffv2_encoding_type_data4  title="union ffv2_encoding_type_data4 "}
