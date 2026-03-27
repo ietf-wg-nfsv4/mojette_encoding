@@ -187,7 +187,7 @@ Recompute Data Block
 
 Assume a file system block of 4KB is divided into a 128x4 matrix of
 128-bit elements.  Using the non-systematic Mojette Transform, we compute
-projections along selected directions, such as (-2,1), (-1, -1), (0,1),
+projections along selected directions, such as (-2,1), (-1,1), (0,1),
 (1,1), (2,1) and (3,1).  The original data is not stored directly;
 instead, the projections are stored.
 
