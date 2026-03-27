@@ -103,6 +103,15 @@ SIMD instructions, or 64-bit elements for compatibility with NEON
 or AVX2 vector widths.  The transform is correct in any ring; no
 Galois field operations are required.
 
+### Direction Generation
+
+Directions are pairs of coprime integers $$(p_i, q_i)$$.  To limit
+projection size overhead, implementations SHOULD use $$q_i = 1$$
+for all directions (as proposed by Parrein et al.).  Whether $$p = 0$$
+is permitted depends on the inverse algorithm: corner-peeling
+reconstruction requires $$p \neq 0$$, while pre-computed
+reconstruction paths (Normand et al., DGCI 2006) can handle $$p = 0$$.
+
 ### Encoding
 
 The Mojette Transform involves the following steps to encode a data block:
