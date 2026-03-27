@@ -406,7 +406,7 @@ As can be seen in {{example-sizes}} , 4kB data blocks need blocks about
 # Extraction of XDR
 
 This document contains the external data representation (XDR)
-{{RFC4506}} description of the uncacheable attribute.  The XDR
+{{RFC4506}} description of the Mojette encoding types.  The XDR
 description is presented in a manner that facilitates easy extraction
 into a ready-to-compile format. To extract the machine-readable XDR
 description, use the following shell script:
@@ -420,7 +420,7 @@ For example, if the script is named 'extract.sh' and this document is
 named 'spec.txt', execute the following command:
 
 ~~~ shell
-sh extract.sh < spec.txt > uncacheable_prot.x
+sh extract.sh < spec.txt > mojette_encoding_prot.x
 ~~~
 
 This script removes leading blank spaces and the sentinel sequence '///'
