@@ -40,6 +40,9 @@ jobs:
         key: i-d-${{ steps.setup.outputs.date }}
         restore-keys: i-d-
 
+    - name: "Install tex2mail for math expressions"
+      run: sudo apt-get update && sudo apt-get install -y texlive-extra-utils
+
     - name: "Build Drafts"
       uses: martinthomson/i-d-template@v1
       with:
