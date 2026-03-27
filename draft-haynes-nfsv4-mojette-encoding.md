@@ -181,6 +181,13 @@ which is a contiguous segment of data, typically 4KB or 8KB in size.
 The Mojette Transform encodes these blocks to ensure data integrity and
 availability in distributed storage environments.
 
+Note that projection sizes vary by direction (see {{fig-size}}).
+When using CHUNK operations for DS I/O, the chunk_size in CHUNK_WRITE
+is a nominal stride; the last chunk in a parity shard MAY be shorter
+than the stride when the projection size is not a multiple of the
+chunk size.  The metadata server MUST communicate the per-mirror
+data size to the client, either via the layout or by convention.
+
 ## Non-Systematic Mojette Transform
 
 ### Block Encoding
