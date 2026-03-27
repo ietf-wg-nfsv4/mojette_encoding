@@ -133,7 +133,7 @@ For a given projection direction $$(p_i, q_i)$$,
 and if we let $$\Delta$$ be 1 if the argument is zero and 0 otherwise,
 the projection values are calculated as in
 
-Projection(b, p_i, q_i) =   
+Projection(b, p_i, q_i) =
 ∑_{k=0}^{Q−1} ∑_{l=0}^{P−1} Data(k, l) ⋅ Δ(b − l ⋅ p_i + k ⋅ q_i)
 
 $$
