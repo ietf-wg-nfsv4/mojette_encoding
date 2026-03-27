@@ -132,11 +132,15 @@ the projection differences and the projection directions $$(p_i, q_i)$$.
 The algorithm iterates to refine the values of the missing data
 elements until the original data block is reconstructed.
 
-Data reconstruction is possible if Katz's criterion holds, which was
-extended to any convex shape.  It specifies that
-reconstruction is valid if for a given set of n projections along $$n$$
-directions $$(p_i, q_i)$$ either $$\sum_{i=0}^{n} q_i ≥ Q$$ or
-$$\sum_{i=0}^{n} p_i ≥ P$$.
+Data reconstruction is possible if and only if Katz's criterion holds,
+which was extended to any convex shape.  It specifies that
+reconstruction is valid if for a given set of $$n$$ projections along
+directions $$(p_i, q_i)$$ either $$\sum_{i=1}^{n} |q_i| ≥ Q$$ or
+$$\sum_{i=1}^{n} |p_i| ≥ P$$.
+
+Note: when all $$q_i = 1$$ (the common convention from Parrein 2001),
+the q-sum simplifies to $$n \geq Q$$.  The absolute values on $$p_i$$
+are significant when negative directions are used.
 
 Adjusting the number of lines Q and the projections set allows
 setting a desired fault-tolerance threshold.
